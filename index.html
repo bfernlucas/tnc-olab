@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard MEL · TNC Agricultura Familiar no Pará</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── reset ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dk:#053d3c;--tl:#39bfb2;--bl:#438b9e;--gn:#1a5c1a;
+  --tr:#c25730;--bg:#f8f8f6;--wh:#fff;--bd:#d3d1c7;
+  --tx:#1a1a1a;--mu:#777;--r:10px;--rs:6px;
+  font-family:'Segoe UI',Arial,sans-serif;
+}
+body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
+
+/* ── topbar ─────────────────────────────────────────── */
+.top{background:var(--dk);color:#fff;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top h1{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.top .sub{font-size:11px;color:var(--tl);margin-top:2px}
+.top-right{text-align:right;font-size:11px;line-height:1.7}
+.top-right strong{color:#fff}
+
+/* ── fonte banner ───────────────────────────────────── */
+.fonte-bar{background:#e0f4f1;border-bottom:1px solid #b0dbd7;padding:7px 24px;font-size:11px;color:#085041;display:flex;align-items:center;gap:8px}
+.fonte-bar b{font-weight:600}
+.fonte-bar .url-pill{background:#fff;border:1px solid #b0dbd7;border-radius:4px;padding:2px 8px;font-family:monospace;font-size:10px;color:#085041;cursor:text}
+
+/* ── tabs ───────────────────────────────────────────── */
+.tabs{background:#f0f0ee;border-bottom:1px solid var(--bd);display:flex;gap:2px;padding:10px 20px 0;overflow-x:auto}
+.tab{padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;border-radius:var(--rs) var(--rs) 0 0;color:var(--mu);border:1px solid transparent;border-bottom:none;background:none;white-space:nowrap}
+.tab.on{background:var(--wh);color:var(--dk);border-color:var(--bd)}
+.tab:hover:not(.on){background:#e5e5e2}
+
+/* ── main ───────────────────────────────────────────── */
+.main{padding:20px;max-width:1440px;margin:0 auto}
+.panel{display:none}.panel.on{display:block}
+.sec{margin-bottom:22px}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:10px}
+
+/* ── alerta ─────────────────────────────────────────── */
+.alert{display:flex;gap:10px;padding:9px 14px;border-radius:var(--rs);font-size:12px;margin-bottom:8px}
+.alert.info{background:#e0f4f1;border-left:3px solid var(--tl);color:#085041}
+.alert.warn{background:#fdf3e0;border-left:3px solid #c7ab8c;color:#6b4c1a}
+
+/* ── kpi grid ───────────────────────────────────────── */
+.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.kpi{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px}
+.kpi-lbl{font-size:11px;color:var(--mu);margin-bottom:5px}
+.kpi-id{font-size:9px;color:#bbb;font-weight:600;letter-spacing:.05em;margin-bottom:3px}
+.kpi-val{font-size:28px;font-weight:700;color:var(--dk);line-height:1}
+.kpi-val.nd{color:#ccc;font-size:20px;font-weight:400}
+.kpi-meta{font-size:10px;color:var(--mu);margin-top:4px}
+.kpi-bar{height:4px;background:#eee;border-radius:2px;margin-top:8px}
+.kpi-fill{height:4px;border-radius:2px;width:0}
+
+/* ── 2-col / 3-col grids ────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── card ───────────────────────────────────────────── */
+.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.card-ttl{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:10px}
+.card-id{font-size:9px;color:#bbb;font-weight:600;letter-spacing:.05em;margin-left:6px;vertical-align:middle}
+.hr{height:1px;background:var(--bd);margin:10px 0 12px}
+
+/* ── mini-kpi ───────────────────────────────────────── */
+.mk{background:#f8f8f6;border-radius:var(--rs);padding:10px 12px}
+.mk-lbl{font-size:10px;color:var(--mu);margin-bottom:3px}
+.mk-val{font-size:22px;font-weight:700}
+.mk-val.nd{color:#ccc;font-size:16px;font-weight:400}
+
+/* ── progress row ───────────────────────────────────── */
+.pr{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pr-lbl{font-size:12px;color:var(--mu);width:160px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-id{font-size:9px;color:#ccc;margin-left:3px}
+.pr-bg{flex:1;height:8px;background:#eee;border-radius:4px}
+.pr-fill{height:8px;border-radius:4px;width:0}
+.pr-v{font-size:12px;font-weight:700;color:var(--tx);width:38px;text-align:right}
+
+/* ── table ──────────────────────────────────────────── */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:8px 10px;color:var(--mu);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--bd);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid #f0f0ee;vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:#fafaf8}
+
+/* ── badge ──────────────────────────────────────────── */
+.bdg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
+.bdg-ok{background:#e0f4e0;color:#1a5c1a}
+.bdg-warn{background:#fdf3e0;color:#7a4e00}
+.bdg-nd{background:#f1efe8;color:#999}
+.bdg-tl{background:#e0f4f1;color:#085041}
+
+/* ── chip ───────────────────────────────────────────── */
+.chip{display:inline-block;background:#f1efe8;color:#444;border-radius:10px;padding:1px 7px;font-size:10px;margin:1px}
+
+/* ── radar placeholder ──────────────────────────────── */
+.radar-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;background:#fafaf8;border-radius:var(--rs);color:var(--mu);font-size:11px;gap:6px}
+.radar-ico{font-size:36px;opacity:.35}
+
+/* ── nota rodapé ────────────────────────────────────── */
+.footnote{font-size:10px;color:#aaa;margin-top:8px;line-height:1.5}
+
+/* ── responsive ─────────────────────────────────────── */
+@media(max-width:780px){
+  .kg{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3{grid-template-columns:1fr}
+  .top{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP ──────────────────────────────────────────────── -->
+<div class="top">
+  <div>
+    <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
+    <div class="sub">TNC Brasil · Accenture / GlobalGiving · Monitoramento: Olab</div>
+  </div>
+  <div class="top-right">
+    <strong id="hdr-quinzena">Quinzena —</strong><br>
+    Período: <span id="hdr-periodo">—</span><br>
+    Atualizado: <span id="hdr-data">—</span>
+  </div>
+</div>
+
+<!-- ── FONTE ─────────────────────────────────────────────── -->
+<div class="fonte-bar">
+  <b>Fonte de dados:</b>
+  <span class="url-pill" id="fonte-url">data/mock.json</span>
+  <span>— configure <code>DATA_URL</code> em <code>js/config.js</code> para apontar para sua planilha (Google Sheets CSV ou SharePoint)</span>
+</div>
+
+<!-- ── TABS ─────────────────────────────────────────────── -->
+<div class="tabs">
+  <button class="tab on"  onclick="tab('geral',this)">Visão Geral</button>
+  <button class="tab"     onclick="tab('individuos',this)">Indivíduos · P1</button>
+  <button class="tab"     onclick="tab('p2',this)">Desenv. Territorial · P2</button>
+  <button class="tab"     onclick="tab('resultados',this)">Resultados CP / MP</button>
+  <button class="tab"     onclick="tab('qualidade',this)">Qualidade dos Dados</button>
+</div>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  VISÃO GERAL                                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel on" id="p-geral">
+
+  <div id="alertas" class="sec"></div>
+
+  <div class="sec">
+    <div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div>
+    <div class="kg">
+      <div class="kpi">
+        <div class="kpi-id">1.1.1</div>
+        <div class="kpi-lbl">Conectadas</div>
+        <div class="kpi-val nd" id="k-con">—</div>
+        <div class="kpi-meta">meta: 1.000 pessoas</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-con"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.2.1</div>
+        <div class="kpi-lbl">Melhoradas</div>
+        <div class="kpi-val nd" id="k-mel">—</div>
+        <div class="kpi-meta">meta: 800 pessoas</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-mel"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.3.1</div>
+        <div class="kpi-lbl">Transformadas</div>
+        <div class="kpi-val nd" id="k-tra">—</div>
+        <div class="kpi-meta">meta: 150–200 pessoas</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-tra"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">2.2.2</div>
+        <div class="kpi-lbl">Progressão Con → Mel</div>
+        <div class="kpi-val nd" id="k-prog">—</div>
+        <div class="kpi-meta">referência: ≥ 80%</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prog"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div>
+    <div class="kg">
+      <div class="kpi">
+        <div class="kpi-id">1.4.1</div>
+        <div class="kpi-lbl">Agricultores com ATER</div>
+        <div class="kpi-val nd" id="k-ater">—</div>
+        <div class="kpi-meta">meta: 150 agricultores</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-ater"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.5.1</div>
+        <div class="kpi-lbl">CARs regularizados</div>
+        <div class="kpi-val nd" id="k-car">—</div>
+        <div class="kpi-meta">meta: ~50 propriedades</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-car"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.6.1</div>
+        <div class="kpi-lbl">PRADAs elaborados</div>
+        <div class="kpi-val nd" id="k-prada">—</div>
+        <div class="kpi-meta">meta: 50 relatórios</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prada"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.7.2</div>
+        <div class="kpi-lbl">Projetos crédito submetidos</div>
+        <div class="kpi-val nd" id="k-cred">—</div>
+        <div class="kpi-meta">meta: ~40 projetos</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-cred"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.8.1</div>
+        <div class="kpi-lbl">UDs implantadas</div>
+        <div class="kpi-val nd" id="k-uds">—</div>
+        <div class="kpi-meta">meta: 8–10 UDs</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tr)" id="b-uds"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-id">1.9.1 · 1.10.1</div>
+        <div class="kpi-lbl">Organizações + Redes</div>
+        <div class="kpi-val nd" id="k-org">—</div>
+        <div class="kpi-meta">meta: 8–12 org · 2 redes</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#543017" id="b-org"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
+      <div style="position:relative;height:210px"><canvas id="ch-pessoas"></canvas></div>
+      <div class="footnote">Por quinzena · fonte: base consolidada Olab · meta indicada pela linha tracejada</div>
+    </div>
+    <div class="card">
+      <div class="card-ttl">Progresso por eixo do P2 (% da meta)</div>
+      <div style="position:relative;height:210px"><canvas id="ch-eixos"></canvas></div>
+      <div class="footnote">Fonte: relatórios dos parceiros sistematizados pela Olab</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  INDIVÍDUOS · P1                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel" id="p-individuos">
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
+      <div class="hr"></div>
+      <div class="pr">
+        <span class="pr-lbl">Conectadas<span class="pr-id">1.1.1</span></span>
+        <div class="pr-bg"><div class="pr-fill" style="background:var(--dk)" id="pf-con"></div></div>
+        <span class="pr-v nd" id="pv-con">—</span>
+      </div>
+      <div class="pr">
+        <span class="pr-lbl">Melhoradas<span class="pr-id">1.2.1</span></span>
+        <div class="pr-bg"><div class="pr-fill" style="background:var(--tl)" id="pf-mel"></div></div>
+        <span class="pr-v nd" id="pv-mel">—</span>
+      </div>
+      <div class="pr">
+        <span class="pr-lbl">Transformadas<span class="pr-id">1.3.1</span></span>
+        <div class="pr-bg"><div class="pr-fill" style="background:var(--bl)" id="pf-tra"></div></div>
+        <span class="pr-v nd" id="pv-tra">—</span>
+      </div>
+      <div class="footnote" style="margin-top:10px">
+        Controle de unicidade por CPF/nome + município · Coleta quinzenal pelos parceiros · Consolidação Olab
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
+      <div class="hr"></div>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="mk"><div class="mk-lbl">% com prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Média práticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Prop. com mudança verificável (2.1.4)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">% com mudança observável (2.1.5)</div><div class="mk-val nd">—</div></div>
+      </div>
+      <div class="footnote">
+        Amostra intencional estratificada: 50 visitas Olab · 32 Transamazônica + 18 Sudeste do Pará<br>
+        Periodicidade: semestral (ciclos de campo) · Instrumento: KoboToolbox
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-lbl">Contribuição por parceiro — Conectadas (1.1.1)</div>
+    <div class="card">
+      <div class="card-ttl">Pessoas conectadas por parceiro implementador</div>
+      <div class="hr"></div>
+      <div style="position:relative;height:220px"><canvas id="ch-parceiros"></canvas></div>
+      <div class="footnote">Dados virão da planilha vinculada — cada parceiro reporta quinzenalmente</div>
+    </div>
+  </div>
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
+      <div class="hr"></div>
+      <div class="pr"><span class="pr-lbl">Crescer</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Solidaridad</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
+      <div style="margin-top:6px;padding-top:10px;border-top:1px solid #f0f0ee">
+        <div class="pr"><span class="pr-lbl">Total agricultores (meta 150)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)" id="pf-ater"></div></div><span class="pr-v nd" id="pv-ater">—</span></div>
+        <div class="pr"><span class="pr-lbl">Total visitas realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c"></div></div><span class="pr-v nd">—</span></div>
+      </div>
+      <div class="footnote">Coleta mensal pelos parceiros · Verificação amostral semestral pela Olab</div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">Regularização ambiental <span class="card-id">1.5.1 · 1.6.1</span></div>
+      <div class="hr"></div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="mk"><div class="mk-lbl">CARs regularizados (1.5.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:3px">meta: ~50</div></div>
+        <div class="mk"><div class="mk-lbl">PRADAs elaborados (1.6.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:3px">meta: 50</div></div>
+      </div>
+      <div class="pr"><span class="pr-lbl">CARs (Solidaridad + Crescer)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)" id="pf-car"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">PRADAs (Solidaridad)</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c" id="pf-prada"></div></div><span class="pr-v nd">—</span></div>
+      <div class="footnote">Periodicidade: semestral · Cruzamento com PLANAVEG pela Olab</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  DESENV. TERRITORIAL · P2                             -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel" id="p-p2">
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">Crédito rural <span class="card-id">1.7.1 · 1.7.2 · 2.4.1 · 2.4.2</span></div>
+      <div class="hr"></div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="mk"><div class="mk-lbl">Dossiês elaborados (1.7.1)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Submetidos às inst. financeiras (1.7.2)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Aprovados (2.4.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: ~40</div></div>
+        <div class="mk"><div class="mk-lbl">Valor total acessado R$ (2.4.2)</div><div class="mk-val nd">—</div></div>
+      </div>
+      <div class="footnote">Creditares + AgroOpen · Mensal · Parceiros: Creditares, Solidaridad, UNICAFES</div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">Unidades Demonstrativas <span class="card-id">1.8.1 – 1.8.4</span></div>
+      <div class="hr"></div>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="mk"><div class="mk-lbl">UDs implantadas (1.8.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 8–10</div></div>
+        <div class="mk"><div class="mk-lbl">Treinamentos realizados (1.8.2)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Tecnologias aplicadas (1.8.3)</div><div class="mk-val nd">—</div></div>
+      </div>
+      <div class="pr"><div class="pr-lbl">Participantes por UD — total (1.8.4)</div><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="footnote">Trimestral · Crescer, FUNEP, Solidaridad · Fichas padronizadas por UD</div>
+    </div>
+  </div>
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">Maturidade institucional — KSI D1 <span class="card-id">1.9.1 · 2.5.1 – 2.5.4</span></div>
+      <div class="hr"></div>
+      <div class="pr"><span class="pr-lbl">Org. com plano estratégico (1.9.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Cooperados ativos (2.5.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Parcerias firmadas (2.5.2)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Editais acessados (2.5.3)</span><div class="pr-bg"><div class="pr-fill" style="background:#c25730)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Novos mercados (2.5.4)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
+      <div class="footnote">Semestral · ISES, UNICAFES, Terra Preta · Verificação documental Olab</div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
+      <div class="hr"></div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="mk"><div class="mk-lbl">Redes ativas (1.10.1 / 2.6.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 2 redes</div></div>
+        <div class="mk"><div class="mk-lbl">Compras coletivas realizadas (1.11.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta a definir</div></div>
+        <div class="mk"><div class="mk-lbl">Volume compras públicas R$ (2.7.1)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Redução custo insumos (2.9.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">% vs. antes negociação</div></div>
+      </div>
+      <div class="footnote">Sense-Lab (redes) · UNICAFES (mercados) · Semestral · Cálculo diferencial: Olab</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-lbl">Tabela de situação das UDs (1.8.1)</div>
+    <div class="card">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Município</th><th>Território</th><th>Parceiro</th><th>Tipo/Foco</th><th>Status</th><th>Treinamentos</th><th>Participantes</th><th>Tecnologias</th></tr></thead>
+          <tbody>
+            <tr><td>Altamira</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Pecuária sustentável</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+            <tr><td>Medicilândia</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Cacau / SAF</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+            <tr><td>Tucumã</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / Cooperfruti</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / CACUXI</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">FUNEP</span></td><td>Pecuária intensiva (NICFI)</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footnote">Dados virão da planilha vinculada · Meta: 8–10 UDs · Parceiros: Crescer, FUNEP, Solidaridad</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  RESULTADOS CP / MP                                   -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel" id="p-resultados">
+
+  <div class="sec">
+    <div class="sec-lbl">Resultados de curto prazo — KSIs da ToC TNC</div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-ttl">KSI A3 · Práticas regenerativas adotadas <span class="card-id">2.1.2 – 2.1.5 · 2.1.8</span></div>
+        <div class="hr"></div>
+        <div class="g2" style="margin-bottom:14px">
+          <div class="mk"><div class="mk-lbl">% produtores c/ prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">Média práticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">Prop. c/ evidência verificável (2.1.4)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">% c/ mudança observável (2.1.5)</div><div class="mk-val nd">—</div></div>
+        </div>
+        <div class="footnote">Percepção qualitativa (2.1.8) · 50 visitas Olab · Semestral · KoboToolbox</div>
+      </div>
+
+      <div class="card">
+        <div class="card-ttl">KSI B1 · D2 · D1 · K1 · D3 <span class="card-id">2.2–2.7</span></div>
+        <div class="hr"></div>
+        <div class="pr"><span class="pr-lbl">Pessoas melhoradas (2.2.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Tecnologias testadas nas UDs (2.3.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Acesso a crédito aprovado (2.4.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Redes ativas (2.6.1)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Compras c/ redução documentada (2.7.1)</span><div class="pr-bg"><div class="pr-fill" style="background:#c25730"></div></div><span class="pr-v nd">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-lbl">Resultados de médio prazo — Métricas TNC 2030</div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-ttl">Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
+        <div class="hr"></div>
+        <div class="g2" style="margin-bottom:14px">
+          <div class="mk"><div class="mk-lbl">ha com gestão melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">mín. 2/3 atributos Lands Metrics</div></div>
+          <div class="mk"><div class="mk-lbl">Pessoas transformadas c/ CAR (3.2.2)</div><div class="mk-val nd">—</div></div>
+        </div>
+        <div class="radar-ph">
+          <div class="radar-ico">🗺</div>
+          <div>Análise geoespacial</div>
+          <div style="font-size:10px;color:#bbb">CAR + PRODES/Deter + PLANAVEG · Disponível ao final do P2 (mar/2027)</div>
+        </div>
+        <div class="footnote" style="margin-top:8px">Olab (geoespacial) · TNC Brasil (validação Lands Metrics v2) · Anual</div>
+      </div>
+
+      <div class="card">
+        <div class="card-ttl">Pessoas — Métricas TNC 2030 <span class="card-id">3.2.1 · 3.3.1 · 3.4.1 · 3.5.1</span></div>
+        <div class="hr"></div>
+        <div class="g2" style="margin-bottom:14px">
+          <div class="mk"><div class="mk-lbl">Pessoas transformadas acumuladas (3.2.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 150–200 · People Metrics TNC</div></div>
+          <div class="mk"><div class="mk-lbl">Oportunidade econômica sustentável (3.3.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Capacidade tomada de decisão (3.4.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Arranjos com redução de custo (3.5.1)</div><div class="mk-val nd">—</div></div>
+        </div>
+        <div class="footnote">Verificação: 4 perguntas People Metrics v2 · Semestral/acumulado · Olab + TNC Brasil</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-lbl">Impacto de longo prazo — contribuição do projeto (proxy)</div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-ttl">Áreas críticas conservadas / restauradas <span class="card-id">4.1.1</span></div>
+        <div class="hr"></div>
+        <div class="mk" style="margin-bottom:12px"><div class="mk-lbl">ha sob mecanismo de conservação ou restauração (proxy)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">Mensurável ao final do projeto · PRODES + PLANAVEG + MapBiomas</div></div>
+        <div class="footnote">Impacto de longo prazo — fora do prazo contratual direto<br>Contribuição parcial estimada via dados de sensoriamento remoto</div>
+      </div>
+      <div class="card">
+        <div class="card-ttl">Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
+        <div class="hr"></div>
+        <div class="radar-ph">
+          <div class="radar-ico">🕸</div>
+          <div>Spider Radar — Escala de maturidade de governança</div>
+          <div style="font-size:10px;color:#bbb">6 dimensões · Aplicado nas Oficinas de Pausa e Reflexão</div>
+        </div>
+        <div class="footnote" style="margin-top:8px">Avaliação qualitativa Olab · Final do P2 (mar/2027) · People Metrics TNC: Tomada de Decisão</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  QUALIDADE DOS DADOS                                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel" id="p-qualidade">
+
+  <div class="sec">
+    <div class="sec-lbl">Controle de qualidade · Quinzena atual</div>
+    <div class="kg" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi"><div class="kpi-lbl">Registros recebidos</div><div class="kpi-val nd" id="kq-rec">—</div><div class="kpi-meta">nesta quinzena</div></div>
+      <div class="kpi"><div class="kpi-lbl">Registros validados</div><div class="kpi-val nd" id="kq-val">—</div><div class="kpi-meta" id="kq-pct">% do total</div><div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="bq-val"></div></div></div>
+      <div class="kpi"><div class="kpi-lbl">Lacunas pendentes</div><div class="kpi-val nd" id="kq-lac">—</div><div class="kpi-meta">requerem correção</div></div>
+      <div class="kpi"><div class="kpi-lbl">Docs. digitalizados</div><div class="kpi-val nd" id="kq-dig">—</div><div class="kpi-meta">do acumulado</div><div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="bq-dig"></div></div></div>
+    </div>
+  </div>
+
+  <div class="g2 sec">
+    <div class="card">
+      <div class="card-ttl">Status de entrega por parceiro</div>
+      <div class="hr"></div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Parceiro</th><th>Tipo de entrega</th><th>Periodicidade</th><th>Última entrega</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Crescer</td><td>Listas presença + relatórios ATER</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Solidaridad</td><td>Listas presença + relatórios ATER + CAR/PRADA</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>UNICAFES</td><td>Relatórios institucionais + compras coletivas</td><td>Semestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>FUNEP</td><td>Fichas de UD + relatórios de campo</td><td>Trimestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Sense-Lab</td><td>Atas de redes + planos estratégicos</td><td>Trimestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Creditares</td><td>Extrato AgroOpen + relatórios de crédito</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>ISES</td><td>Diagnósticos SWOT + planos estratégicos</td><td>Semestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-ttl">Controle de campo — amostragem Olab</div>
+      <div class="hr"></div>
+      <div class="pr"><span class="pr-lbl">Visitas ATER realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v">—/50</span></div>
+      <div class="pr"><span class="pr-lbl" title="Transamazônica">↳ Transamazônica</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v">—/32</span></div>
+      <div class="pr"><span class="pr-lbl" title="Sudeste do Pará">↳ Sudeste do Pará</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v">—/18</span></div>
+      <div class="hr"></div>
+      <div class="pr"><span class="pr-lbl">Verificação amostral (10%)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v">—</span></div>
+      <div class="pr"><span class="pr-lbl">Auditorias de organizações</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v">—</span></div>
+      <div class="pr"><span class="pr-lbl">Duplicatas identificadas e removidas</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c"></div></div><span class="pr-v">—</span></div>
+      <div class="footnote" style="margin-top:10px">
+        Próximas oficinas de pausa e reflexão: datas a confirmar com TNC Brasil<br>
+        Controle de unicidade por CPF/nome + município · Base centralizada Olab
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /.main -->
+
+<script>
+// ── config ───────────────────────────────────────────────
+const DATA_URL = 'js/mock.json'; // ← trocar por URL da planilha real
+const METAS = {con:1000,mel:800,tra:175,ater:150,car:50,prada:50,cred:40,uds:10};
+
+// ── tab nav ──────────────────────────────────────────────
+function tab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('p-'+id).classList.add('on');
+}
+
+// ── helpers ──────────────────────────────────────────────
+const f = v => v!=null ? v.toLocaleString('pt-BR') : '—';
+const pct = (v,m) => m&&v!=null ? Math.min(100,Math.round(v/m*100)) : 0;
+
+function setKpi(id,val,meta,barId){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=f(val);
+  el.classList.toggle('nd',val==null);
+  if(barId){
+    const b=document.getElementById(barId);
+    if(b)b.style.width=pct(val,meta)+'%';
+  }
+}
+
+function setPr(fillId,valId,val,meta){
+  const f2=document.getElementById(fillId);
+  const v2=document.getElementById(valId);
+  if(f2)f2.style.width=pct(val,meta)+'%';
+  if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
+}
+
+// ── gráficos ─────────────────────────────────────────────
+function initCharts(){
+  const labels=['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12'];
+  const nullArr=n=>Array(n).fill(null);
+
+  // evolução pessoas
+  new Chart(document.getElementById('ch-pessoas'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Conectadas',    data:nullArr(12),borderColor:'#053d3c',backgroundColor:'#053d3c18',fill:true,tension:.35,pointRadius:3,borderWidth:2},
+      {label:'Melhoradas',    data:nullArr(12),borderColor:'#39bfb2',backgroundColor:'#39bfb218',fill:true,tension:.35,pointRadius:3,borderWidth:2},
+      {label:'Transformadas', data:nullArr(12),borderColor:'#438b9e',backgroundColor:'#438b9e18',fill:true,tension:.35,pointRadius:3,borderWidth:2},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:10}}},
+      scales:{y:{beginAtZero:true,grid:{color:'#f0f0ee'},ticks:{color:'#999',font:{size:10}}},
+              x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}}}}
+  });
+
+  // progresso eixos
+  new Chart(document.getElementById('ch-eixos'),{
+    type:'bar',
+    data:{
+      labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Crédito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
+      datasets:[{label:'% realizado',data:[0,0,0,0,0,0,0],
+        backgroundColor:['#053d3c','#39bfb2','#39bfb2','#438b9e','#c25730','#543017','#c7ab8c'],
+        borderRadius:4,barThickness:18}]
+    },
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#999',font:{size:10}},grid:{color:'#f0f0ee'}},
+              y:{ticks:{color:'#555',font:{size:10}},grid:{display:false}}}}
+  });
+
+  // parceiros donut
+  new Chart(document.getElementById('ch-parceiros'),{
+    type:'bar',
+    data:{
+      labels:['Crescer','Solidaridad','UNICAFES','FUNEP','Sense-Lab','Creditares','ISES'],
+      datasets:[{label:'Conectadas',data:[0,0,0,0,0,0,0],
+        backgroundColor:['#053d3c','#39bfb2','#438b9e','#c25730','#543017','#c7ab8c','#1a5c1a'],
+        borderRadius:4,barThickness:22}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,grid:{color:'#f0f0ee'},ticks:{color:'#999',font:{size:10}}},
+              x:{ticks:{color:'#555',font:{size:10}},grid:{display:false}}}}
+  });
+}
+
+// ── alertas ──────────────────────────────────────────────
+function renderAlertas(list){
+  const wrap=document.getElementById('alertas');
+  if(!list||!list.length){wrap.innerHTML='';return;}
+  wrap.innerHTML=list.map(a=>`
+    <div class="alert ${a.tipo}">
+      <span>${a.tipo==='warn'?'⚠️':'ℹ️'}</span>
+      <span>${a.msg}</span>
+    </div>`).join('');
+}
+
+// ── mock data (substituir por fetch da planilha real) ─────
+function getMock(){
+  return {
+    atualizado:'—', quinzena:'—', periodo:'Abr/2025 – Set/2026',
+    alertas:[
+      {tipo:'info', msg:'Protótipo com dados simulados. Configure DATA_URL em js/config.js para conectar à planilha real (Google Sheets CSV ou SharePoint).'},
+    ],
+    // todos null = sem dados ainda
+    con:null, mel:null, tra:null,
+    ater:null, car:null, prada:null, cred:null, uds:null,
+  };
+}
+
+// ── init ─────────────────────────────────────────────────
+async function init(){
+  let d;
+  try{
+    const r=await fetch(DATA_URL);
+    d=await r.json();
+  }catch{d=getMock();}
+
+  // fonte banner
+  document.getElementById('fonte-url').textContent=DATA_URL;
+
+  // header
+  document.getElementById('hdr-quinzena').textContent='Quinzena '+(d.quinzena||'—');
+  document.getElementById('hdr-periodo').textContent=d.periodo||'—';
+  document.getElementById('hdr-data').textContent=d.atualizado||'—';
+
+  renderAlertas(d.alertas);
+
+  // kpis visão geral
+  setKpi('k-con',  d.con,  METAS.con,   'b-con');
+  setKpi('k-mel',  d.mel,  METAS.mel,   'b-mel');
+  setKpi('k-tra',  d.tra,  METAS.tra,   'b-tra');
+  setKpi('k-ater', d.ater, METAS.ater,  'b-ater');
+  setKpi('k-car',  d.car,  METAS.car,   'b-car');
+  setKpi('k-prada',d.prada,METAS.prada, 'b-prada');
+  setKpi('k-cred', d.cred, METAS.cred,  'b-cred');
+  setKpi('k-uds',  d.uds,  METAS.uds,   'b-uds');
+  setKpi('k-org',  null,   null,        'b-org');
+
+  // progressão
+  const p=(v,m)=>pct(v,m);
+  ['con','mel','tra'].forEach(k=>{
+    const val=d[k];
+    const meta=METAS[k];
+    const f2=document.getElementById('pf-'+k);
+    const v2=document.getElementById('pv-'+k);
+    if(f2)f2.style.width=p(val,meta)+'%';
+    if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
+  });
+  setKpi('pv-ater',d.ater,METAS.ater,'pf-ater');
+  setKpi('pf-car', d.car, METAS.car, null);
+  setKpi('pf-prada',d.prada,METAS.prada,null);
+
+  // % progressão
+  const prog=d.con&&d.mel ? Math.round(d.mel/d.con*100) : null;
+  setKpi('k-prog',prog!=null?prog+'%':null,100,'b-prog');
+
+  initCharts();
+}
+
+init();
+</script>
+</body>
+</html>
