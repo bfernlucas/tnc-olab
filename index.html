@@ -43,19 +43,19 @@
   --mu2: #a8a5a0;
 
   --r:12px;--rs:8px;
-  --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
-  --sh-md:0 2px 8px rgba(0,0,0,.09),0 8px 24px rgba(0,0,0,.06);
+  --sh:0 1px 2px rgba(0,0,0,.04),0 2px 8px rgba(0,0,0,.02);
+  --sh-md:0 2px 4px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04);
 
-  /* Digital-safe TNC fonts: Verdana/Georgia as alternatives to Imago/Oakleaf */
-  font-family: Verdana,'Segoe UI',-apple-system,Arial,sans-serif;
+  /* Clean, modern typography */
+  font-family: -apple-system,'Segoe UI','Helvetica Neue',sans-serif;
 }
-body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
+body{background:#faf9f6;color:var(--tx);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* ── topbar — TNC brand ────────────────────────────────── */
 .top{
-  background:linear-gradient(135deg, var(--tnc-d) 0%, var(--tnc) 55%, var(--tnc-m) 100%);
+  background:var(--tnc-d);
   color:#fff;padding:0;display:flex;flex-direction:column;
-  box-shadow:0 3px 16px rgba(0,79,32,.35);position:relative;overflow:hidden
+  box-shadow:0 2px 8px rgba(0,79,32,.15);position:relative;overflow:hidden
 }
 .top::before{
   content:'';position:absolute;inset:0;
@@ -67,7 +67,7 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 .top-logo{width:44px;height:44px;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2);padding:4px}
 .top-wordmark{display:flex;flex-direction:column;gap:1px}
 .top-brand{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7)}
-.top h1{font-size:16px;font-weight:700;letter-spacing:-.01em;color:#fff}
+.top h1{font-size:18px;font-weight:600;letter-spacing:-.01em;color:#fff}
 .top .sub{font-size:11px;color:rgba(155,220,155,.9);margin-top:2px}
 .top-meta{display:flex;gap:10px;align-items:center}
 .top-stat{text-align:center;padding:8px 16px;background:rgba(0,0,0,.15);border-radius:var(--rs);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px)}
@@ -80,20 +80,20 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 .top-ribbon .rb-highlight{color:rgba(155,220,155,.8);font-weight:600}
 
 /* ── fonte banner ──────────────────────────────────────── */
-.fonte-bar{background:var(--tnc-l);border-bottom:1px solid rgba(0,121,49,.18);padding:7px 28px;font-size:11px;color:#004f20;display:flex;align-items:center;gap:8px}
+.fonte-bar{background:#f8f7f4;border-bottom:1px solid #f0ede5;padding:10px 40px;font-size:12px;color:var(--mu);display:flex;align-items:center;gap:8px}
 .fonte-bar b{font-weight:700}
 .fonte-bar .url-pill{background:#fff;border:1px solid rgba(0,121,49,.25);border-radius:4px;padding:2px 10px;font-family:monospace;font-size:10px;color:#004f20}
 
 /* ── tabs ──────────────────────────────────────────────── */
-.tabs{background:#fff;border-bottom:2px solid var(--bd);display:flex;gap:0;padding:0 24px;overflow-x:auto}
-.tab{padding:13px 20px;font-size:11px;font-weight:700;cursor:pointer;color:var(--mu);border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s,background .15s;margin-bottom:-2px;display:flex;align-items:center;gap:7px;letter-spacing:.01em}
+.tabs{background:#fff;border-bottom:1px solid #f0ede5;display:flex;gap:0;padding:0 40px;overflow-x:auto}
+.tab{padding:14px 20px;font-size:13px;font-weight:500;cursor:pointer;color:var(--mu);border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s,background .15s;margin-bottom:-1px;display:flex;align-items:center;gap:7px;letter-spacing:0}
 .tab .tab-ico{font-size:13px;opacity:.6}
 .tab.on{color:var(--tnc);border-bottom-color:var(--tnc)}
 .tab.on .tab-ico{opacity:1}
 .tab:hover:not(.on){color:var(--tnc);background:var(--tnc-l)}
 
 /* ── main ──────────────────────────────────────────────── */
-.main{padding:24px 28px;max-width:1440px;margin:0 auto}
+.main{padding:32px 40px;max-width:1440px;margin:0 auto}
 .panel{display:none}.panel.on{display:block}
 .sec{margin-bottom:26px}
 .sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -107,14 +107,14 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 
 /* ── kpi grid ──────────────────────────────────────────── */
 .kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px}
-.kpi{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
+.kpi{background:var(--wh);border:1px solid #f0ede5;border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:box-shadow .2s,transform .2s,border-color .2s;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-accent,var(--tnc))}
 .kpi:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
 .kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .kpi-id{font-size:9px;color:var(--mu2);font-weight:700;letter-spacing:.06em;background:#f4f4f2;padding:2px 7px;border-radius:4px}
 .kpi-ico{font-size:18px;opacity:.55}
-.kpi-lbl{font-size:11px;color:var(--mu);margin-bottom:6px;line-height:1.3}
-.kpi-val{font-size:32px;font-weight:700;color:var(--tnc-d);line-height:1}
+.kpi-lbl{font-size:12px;color:var(--tx2);margin-bottom:8px;line-height:1.3;font-weight:500}
+.kpi-val{font-size:28px;font-weight:600;color:var(--tnc-d);line-height:1}
 .kpi-val.nd{color:#d0cfc8;font-size:22px;font-weight:400}
 .kpi-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
 .kpi-meta{font-size:10px;color:var(--mu2)}
@@ -128,8 +128,8 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 
 /* ── card ──────────────────────────────────────────────── */
-.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh)}
-.card-ttl{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card{background:var(--wh);border:1px solid #f0ede5;border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh)}
+.card-ttl{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card-id{font-size:9px;color:var(--mu2);font-weight:600;letter-spacing:.05em;background:#f4f4f2;padding:2px 7px;border-radius:4px}
 .hr{height:1px;background:var(--bd);margin:12px 0 14px}
 
@@ -194,7 +194,7 @@ tr:hover td{background:#faf9f6}
 .footnote{font-size:10px;color:var(--mu2);margin-top:10px;line-height:1.6;padding-top:8px;border-top:1px solid #f2f1ec}
 
 /* ── summary strip ─────────────────────────────────────── */
-.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;padding:0;background:var(--tnc-d);border-radius:var(--r);margin-bottom:22px;overflow:hidden;box-shadow:var(--sh)}
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;padding:0;background:var(--tnc-d);border-radius:var(--r);margin-bottom:28px;overflow:hidden;box-shadow:var(--sh)}
 .ss-item{text-align:center;padding:16px 10px;position:relative}
 .ss-item+.ss-item::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:rgba(255,255,255,.12)}
 .ss-val{font-size:22px;font-weight:700;color:#fff}
@@ -208,6 +208,9 @@ tr:hover td{background:#faf9f6}
 .panel.on>*:nth-child(3){animation-delay:.08s}
 .panel.on>*:nth-child(4){animation-delay:.12s}
 .panel.on>*:nth-child(5){animation-delay:.16s}
+
+/* ── footer ────────────────────────────────────────────── */
+.footer{background:#fff;border-top:1px solid #f0ede5;padding:32px 40px;text-align:center;color:var(--mu2);font-size:13px;margin-top:40px}
 
 /* ── responsive ────────────────────────────────────────── */
 @media(max-width:900px){
@@ -241,7 +244,7 @@ tr:hover td{background:#faf9f6}
       <div class="top-wordmark">
         <div class="top-brand">The Nature Conservancy</div>
         <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
-        <div class="sub">Pará, Brasil · Programa Accenture / GlobalGiving · Monitoramento: Olab</div>
+        <div class="sub">Pará, Brasil · Programa Accenture / GlobalGiving</div>
       </div>
     </div>
     <div class="top-meta">
@@ -284,11 +287,11 @@ tr:hover td{background:#faf9f6}
 
 <!-- ── TABS ─────────────────────────────────────────────── -->
 <div class="tabs">
-  <button class="tab on"  onclick="tab('geral',this)"><span class="tab-ico">📊</span> Visão Geral</button>
-  <button class="tab"     onclick="tab('individuos',this)"><span class="tab-ico">👥</span> Indivíduos · P1</button>
-  <button class="tab"     onclick="tab('p2',this)"><span class="tab-ico">🌍</span> Desenv. Territorial · P2</button>
-  <button class="tab"     onclick="tab('resultados',this)"><span class="tab-ico">🎯</span> Resultados CP / MP</button>
-  <button class="tab"     onclick="tab('qualidade',this)"><span class="tab-ico">✅</span> Qualidade dos Dados</button>
+  <button class="tab on"  onclick="tab('geral',this)">Visão Geral</button>
+  <button class="tab"     onclick="tab('individuos',this)">Indivíduos · P1</button>
+  <button class="tab"     onclick="tab('p2',this)">Desenv. Territorial · P2</button>
+  <button class="tab"     onclick="tab('resultados',this)">Resultados CP / MP</button>
+  <button class="tab"     onclick="tab('qualidade',this)">Qualidade dos Dados</button>
 </div>
 
 <div class="main">
@@ -312,28 +315,28 @@ tr:hover td{background:#faf9f6}
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div></div>
     <div class="kg">
       <div class="kpi" style="--kpi-accent:#007931">
-        <div class="kpi-top"><div class="kpi-id">1.1.1</div><div class="kpi-ico">👥</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.1.1</div></div>
         <div class="kpi-lbl">Conectadas</div>
         <div class="kpi-val nd" id="k-con">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 1.000 pessoas</div><div class="kpi-pct" id="k-con-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-con"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#4aa241">
-        <div class="kpi-top"><div class="kpi-id">1.2.1</div><div class="kpi-ico">📈</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.2.1</div></div>
         <div class="kpi-lbl">Melhoradas</div>
         <div class="kpi-val nd" id="k-mel">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 800 pessoas</div><div class="kpi-pct" id="k-mel-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-mel"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#0c834c">
-        <div class="kpi-top"><div class="kpi-id">1.3.1</div><div class="kpi-ico">⭐</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.3.1</div></div>
         <div class="kpi-lbl">Transformadas</div>
         <div class="kpi-val nd" id="k-tra">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150–200 pessoas</div><div class="kpi-pct" id="k-tra-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#0c834c" id="b-tra"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#4aa241">
-        <div class="kpi-top"><div class="kpi-id">2.2.2</div><div class="kpi-ico">🔄</div></div>
+        <div class="kpi-top"><div class="kpi-id">2.2.2</div></div>
         <div class="kpi-lbl">Progressão Con → Mel</div>
         <div class="kpi-val nd" id="k-prog">—</div>
         <div class="kpi-footer"><div class="kpi-meta">referência: ≥ 80%</div><div class="kpi-pct" id="k-prog-pct"></div></div>
@@ -346,42 +349,42 @@ tr:hover td{background:#faf9f6}
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div></div>
     <div class="kg">
       <div class="kpi" style="--kpi-accent:#007931">
-        <div class="kpi-top"><div class="kpi-id">1.4.1</div><div class="kpi-ico">🌱</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.4.1</div></div>
         <div class="kpi-lbl">Agricultores com ATER</div>
         <div class="kpi-val nd" id="k-ater">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150 agricultores</div><div class="kpi-pct" id="k-ater-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-ater"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#4aa241">
-        <div class="kpi-top"><div class="kpi-id">1.5.1</div><div class="kpi-ico">📋</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.5.1</div></div>
         <div class="kpi-lbl">CARs regularizados</div>
         <div class="kpi-val nd" id="k-car">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~50 propriedades</div><div class="kpi-pct" id="k-car-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-car"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#4aa241">
-        <div class="kpi-top"><div class="kpi-id">1.6.1</div><div class="kpi-ico">📄</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.6.1</div></div>
         <div class="kpi-lbl">PRADAs elaborados</div>
         <div class="kpi-val nd" id="k-prada">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 50 relatórios</div><div class="kpi-pct" id="k-prada-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-prada"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#2b7bb9">
-        <div class="kpi-top"><div class="kpi-id">1.7.2</div><div class="kpi-ico">💰</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.7.2</div></div>
         <div class="kpi-lbl">Projetos crédito submetidos</div>
         <div class="kpi-val nd" id="k-cred">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~40 projetos</div><div class="kpi-pct" id="k-cred-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#2b7bb9" id="b-cred"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#7d6447">
-        <div class="kpi-top"><div class="kpi-id">1.8.1</div><div class="kpi-ico">🏡</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.8.1</div></div>
         <div class="kpi-lbl">UDs implantadas</div>
         <div class="kpi-val nd" id="k-uds">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–10 UDs</div><div class="kpi-pct" id="k-uds-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#7d6447" id="b-uds"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:#0c834c">
-        <div class="kpi-top"><div class="kpi-id">1.9.1 · 1.10.1</div><div class="kpi-ico">🤝</div></div>
+        <div class="kpi-top"><div class="kpi-id">1.9.1 · 1.10.1</div></div>
         <div class="kpi-lbl">Organizações + Redes</div>
         <div class="kpi-val nd" id="k-org">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–12 org · 2 redes</div><div class="kpi-pct" id="k-org-pct"></div></div>
@@ -392,12 +395,12 @@ tr:hover td{background:#faf9f6}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">📉 Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
+      <div class="card-ttl">Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
       <div style="position:relative;height:240px"><canvas id="ch-pessoas"></canvas></div>
       <div class="footnote">Por quinzena · fonte: base consolidada Olab · meta indicada pela linha tracejada</div>
     </div>
     <div class="card">
-      <div class="card-ttl">📊 Progresso por eixo do P2 (% da meta)</div>
+      <div class="card-ttl">Progresso por eixo do P2 (% da meta)</div>
       <div style="position:relative;height:240px"><canvas id="ch-eixos"></canvas></div>
       <div class="footnote">Fonte: relatórios dos parceiros sistematizados pela Olab</div>
     </div>
@@ -412,7 +415,7 @@ tr:hover td{background:#faf9f6}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">🔽 Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
+      <div class="card-ttl">Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
       <div class="hr"></div>
       <div class="funnel">
         <div class="funnel-step">
@@ -464,7 +467,7 @@ tr:hover td{background:#faf9f6}
     </div>
 
     <div class="card">
-      <div class="card-ttl">📋 Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
+      <div class="card-ttl">Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:12px">
         <div class="mk"><div class="mk-lbl">% com prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
@@ -482,7 +485,7 @@ tr:hover td{background:#faf9f6}
   <div class="sec">
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Contribuição por parceiro — Conectadas (1.1.1)</div></div>
     <div class="card">
-      <div class="card-ttl">👥 Pessoas conectadas por parceiro implementador</div>
+      <div class="card-ttl">Pessoas conectadas por parceiro implementador</div>
       <div class="hr"></div>
       <div style="position:relative;height:240px"><canvas id="ch-parceiros"></canvas></div>
       <div class="footnote">Dados virão da planilha vinculada — cada parceiro reporta quinzenalmente</div>
@@ -491,7 +494,7 @@ tr:hover td{background:#faf9f6}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">🌱 ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
+      <div class="card-ttl">ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
       <div class="hr"></div>
       <div class="pr"><span class="pr-lbl">Crescer</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">Solidaridad</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
@@ -561,7 +564,7 @@ tr:hover td{background:#faf9f6}
     </div>
 
     <div class="card">
-      <div class="card-ttl">🤝 Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
+      <div class="card-ttl">Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
         <div class="mk"><div class="mk-lbl">Redes ativas (1.10.1 / 2.6.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 2 redes</div></div>
@@ -630,14 +633,14 @@ tr:hover td{background:#faf9f6}
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Resultados de médio prazo — Métricas TNC 2030</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">🗺 Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
+        <div class="card-ttl">Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
           <div class="mk"><div class="mk-lbl">ha com gestão melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div class="mk-sub">mín. 2/3 atributos Lands Metrics</div></div>
           <div class="mk"><div class="mk-lbl">Pessoas transformadas c/ CAR (3.2.2)</div><div class="mk-val nd">—</div></div>
         </div>
         <div class="radar-ph">
-          <div class="radar-ico">🗺</div>
+          <div class="radar-ico"></div>
           <div>Análise geoespacial</div>
           <div class="radar-sub">CAR + PRODES/Deter + PLANAVEG · Disponível ao final do P2 (mar/2027)</div>
         </div>
@@ -668,10 +671,10 @@ tr:hover td{background:#faf9f6}
         <div class="footnote">Impacto de longo prazo — fora do prazo contratual direto<br>Contribuição parcial estimada via dados de sensoriamento remoto</div>
       </div>
       <div class="card">
-        <div class="card-ttl">🕸 Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
+        <div class="card-ttl">Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
         <div class="hr"></div>
         <div class="radar-ph">
-          <div class="radar-ico">🕸</div>
+          <div class="radar-ico"></div>
           <div>Spider Radar — Escala de maturidade de governança</div>
           <div class="radar-sub">6 dimensões · Aplicado nas Oficinas de Pausa e Reflexão</div>
         </div>
@@ -691,26 +694,26 @@ tr:hover td{background:#faf9f6}
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--gn)"></div><div class="sec-lbl">Controle de qualidade · Quinzena atual</div></div>
     <div class="g4">
       <div class="kpi" style="--kpi-accent:var(--dk)">
-        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">📥</div></div>
+        <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Registros recebidos</div>
         <div class="kpi-val nd" id="kq-rec">—</div>
         <div class="kpi-meta">nesta quinzena</div>
       </div>
       <div class="kpi" style="--kpi-accent:var(--tl)">
-        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">✅</div></div>
+        <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Registros validados</div>
         <div class="kpi-val nd" id="kq-val">—</div>
         <div class="kpi-meta" id="kq-pct">% do total</div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="bq-val"></div></div>
       </div>
       <div class="kpi" style="--kpi-accent:var(--am)">
-        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">⚠️</div></div>
+        <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Lacunas pendentes</div>
         <div class="kpi-val nd" id="kq-lac">—</div>
         <div class="kpi-meta">requerem correção</div>
       </div>
       <div class="kpi" style="--kpi-accent:var(--dk)">
-        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">📄</div></div>
+        <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Docs. digitalizados</div>
         <div class="kpi-val nd" id="kq-dig">—</div>
         <div class="kpi-meta">do acumulado</div>
@@ -1002,5 +1005,11 @@ async function init(){
 
 init();
 </script>
+
+<!-- ── FOOTER ───────────────────────────────────────────── -->
+<div class="footer">
+  Elaborado por Olab
+</div>
+
 </body>
 </html>
