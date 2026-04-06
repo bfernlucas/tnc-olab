@@ -9,64 +9,112 @@
 /* ── reset & tokens ────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dk:#053d3c;--dk2:#07514f;--tl:#39bfb2;--tl2:#2ea89c;
-  --bl:#438b9e;--gn:#1a5c1a;--tr:#c25730;--am:#d4900a;
-  --bg:#f2f3f0;--wh:#ffffff;--bd:#e2e0d8;
-  --tx:#1a1a1a;--tx2:#444;--mu:#7a7a7a;--mu2:#b0afa8;
+  /* ── TNC Official Brand Colors ─────────────────────────
+     Primary:   #007931  "Fun Green"  (logo, headlines)
+     Secondary: #4AA241  "Apple Green" (accents, CTA)
+     Refs: brandfetch.com/nature.org · logotyp.us
+  ─────────────────────────────────────────────────────── */
+  --tnc:    #007931;   /* TNC Fun Green — primary brand */
+  --tnc-d:  #004f20;   /* Forest deep — header BG */
+  --tnc-m:  #0c834c;   /* Middle green — cards/borders */
+  --tnc-l:  #e6f2eb;   /* Light tint — section backgrounds */
+  --leaf:   #4aa241;   /* Apple Green — highlights & bars */
+  --sky:    #2b7bb9;   /* Sky/Water Blue — geographic data */
+  --earth:  #7d6447;   /* Earth Brown — land/soil metrics */
+  --sand:   #f0ece2;   /* Sand — warm off-white */
+  --tr:     #c25730;   /* Terracotta — alerts/attention */
+  --am:     #c97d0a;   /* Amber — warnings */
+
+  /* ── layout aliases ────────────────────────────────── */
+  --dk:  var(--tnc-d);
+  --dk2: var(--tnc);
+  --tl:  var(--leaf);
+  --tl2: #3d912f;
+  --bl:  var(--sky);
+  --gn:  var(--tnc);
+
+  /* ── neutrals ──────────────────────────────────────── */
+  --bg:  #f3f2ee;
+  --wh:  #ffffff;
+  --bd:  #dddbd3;
+  --tx:  #1a1a1a;
+  --tx2: #3d3d3d;
+  --mu:  #6b6b68;
+  --mu2: #a8a5a0;
+
   --r:12px;--rs:8px;
   --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
-  --sh-md:0 2px 8px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.06);
-  font-family:'Segoe UI',-apple-system,Arial,sans-serif;
+  --sh-md:0 2px 8px rgba(0,0,0,.09),0 8px 24px rgba(0,0,0,.06);
+
+  /* Digital-safe TNC fonts: Verdana/Georgia as alternatives to Imago/Oakleaf */
+  font-family: Verdana,'Segoe UI',-apple-system,Arial,sans-serif;
 }
 body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 
-/* ── topbar ────────────────────────────────────────────── */
-.top{background:linear-gradient(135deg,var(--dk) 0%,var(--dk2) 100%);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 2px 12px rgba(5,61,60,.3)}
+/* ── topbar — TNC brand ────────────────────────────────── */
+.top{
+  background:linear-gradient(135deg, var(--tnc-d) 0%, var(--tnc) 55%, var(--tnc-m) 100%);
+  color:#fff;padding:0;display:flex;flex-direction:column;
+  box-shadow:0 3px 16px rgba(0,79,32,.35);position:relative;overflow:hidden
+}
+.top::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 2C18 2 9 11 11 24C13 35 20 44 30 48C40 44 47 35 49 24C51 11 42 2 30 2Z' fill='rgba(255,255,255,0.02)'/%3E%3C/svg%3E") repeat;
+  pointer-events:none
+}
+.top-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 28px}
 .top-left{display:flex;align-items:center;gap:14px}
-.top-logo{width:38px;height:38px;background:rgba(57,191,178,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid rgba(57,191,178,.25)}
-.top h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
-.top .sub{font-size:11px;color:rgba(57,191,178,.85);margin-top:2px}
-.top-meta{display:flex;gap:12px;align-items:center}
-.top-stat{text-align:center;padding:8px 16px;background:rgba(255,255,255,.07);border-radius:var(--rs);border:1px solid rgba(255,255,255,.1)}
-.top-stat .ts-lbl{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em}
+.top-logo{width:44px;height:44px;background:rgba(255,255,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2);padding:4px}
+.top-wordmark{display:flex;flex-direction:column;gap:1px}
+.top-brand{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.top h1{font-size:16px;font-weight:700;letter-spacing:-.01em;color:#fff}
+.top .sub{font-size:11px;color:rgba(155,220,155,.9);margin-top:2px}
+.top-meta{display:flex;gap:10px;align-items:center}
+.top-stat{text-align:center;padding:8px 16px;background:rgba(0,0,0,.15);border-radius:var(--rs);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px)}
+.top-stat .ts-lbl{font-size:9px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em}
 .top-stat .ts-val{font-size:13px;font-weight:700;color:#fff;margin-top:1px}
+/* partner ribbon */
+.top-ribbon{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.08);padding:6px 28px;font-size:10px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top-ribbon span{white-space:nowrap}
+.top-ribbon .rb-sep{opacity:.35}
+.top-ribbon .rb-highlight{color:rgba(155,220,155,.8);font-weight:600}
 
 /* ── fonte banner ──────────────────────────────────────── */
-.fonte-bar{background:#e8f5f3;border-bottom:1px solid #c5e5e1;padding:7px 28px;font-size:11px;color:#085041;display:flex;align-items:center;gap:8px}
-.fonte-bar b{font-weight:600}
-.fonte-bar .url-pill{background:#fff;border:1px solid #c5e5e1;border-radius:4px;padding:2px 10px;font-family:monospace;font-size:10px;color:#085041}
+.fonte-bar{background:var(--tnc-l);border-bottom:1px solid rgba(0,121,49,.18);padding:7px 28px;font-size:11px;color:#004f20;display:flex;align-items:center;gap:8px}
+.fonte-bar b{font-weight:700}
+.fonte-bar .url-pill{background:#fff;border:1px solid rgba(0,121,49,.25);border-radius:4px;padding:2px 10px;font-family:monospace;font-size:10px;color:#004f20}
 
 /* ── tabs ──────────────────────────────────────────────── */
 .tabs{background:#fff;border-bottom:2px solid var(--bd);display:flex;gap:0;padding:0 24px;overflow-x:auto}
-.tab{padding:13px 20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--mu);border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-2px;display:flex;align-items:center;gap:7px}
-.tab .tab-ico{font-size:14px;opacity:.6}
-.tab.on{color:var(--dk);border-bottom-color:var(--tl)}
+.tab{padding:13px 20px;font-size:11px;font-weight:700;cursor:pointer;color:var(--mu);border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s,background .15s;margin-bottom:-2px;display:flex;align-items:center;gap:7px;letter-spacing:.01em}
+.tab .tab-ico{font-size:13px;opacity:.6}
+.tab.on{color:var(--tnc);border-bottom-color:var(--tnc)}
 .tab.on .tab-ico{opacity:1}
-.tab:hover:not(.on){color:var(--dk);background:#f8f8f6}
+.tab:hover:not(.on){color:var(--tnc);background:var(--tnc-l)}
 
 /* ── main ──────────────────────────────────────────────── */
 .main{padding:24px 28px;max-width:1440px;margin:0 auto}
 .panel{display:none}.panel.on{display:block}
 .sec{margin-bottom:26px}
 .sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.sec-accent{height:3px;width:28px;border-radius:2px;background:var(--tl)}
-.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu)}
+.sec-accent{height:3px;width:28px;border-radius:2px;background:var(--tnc)}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mu)}
 
 /* ── alerta ────────────────────────────────────────────── */
 .alert{display:flex;gap:10px;padding:11px 16px;border-radius:var(--rs);font-size:12px;margin-bottom:10px;align-items:flex-start}
-.alert.info{background:#e8f5f3;border-left:3px solid var(--tl);color:#085041}
+.alert.info{background:var(--tnc-l);border-left:3px solid var(--tnc);color:#004f20}
 .alert.warn{background:#fef3dd;border-left:3px solid var(--am);color:#6b4c1a}
 
 /* ── kpi grid ──────────────────────────────────────────── */
 .kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px}
 .kpi{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-accent,var(--tl))}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-accent,var(--tnc))}
 .kpi:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
 .kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .kpi-id{font-size:9px;color:var(--mu2);font-weight:700;letter-spacing:.06em;background:#f4f4f2;padding:2px 7px;border-radius:4px}
 .kpi-ico{font-size:18px;opacity:.55}
 .kpi-lbl{font-size:11px;color:var(--mu);margin-bottom:6px;line-height:1.3}
-.kpi-val{font-size:32px;font-weight:700;color:var(--dk);line-height:1}
+.kpi-val{font-size:32px;font-weight:700;color:var(--tnc-d);line-height:1}
 .kpi-val.nd{color:#d0cfc8;font-size:22px;font-weight:400}
 .kpi-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
 .kpi-meta{font-size:10px;color:var(--mu2)}
@@ -86,9 +134,9 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 .hr{height:1px;background:var(--bd);margin:12px 0 14px}
 
 /* ── mini-kpi ──────────────────────────────────────────── */
-.mk{background:#f8f8f5;border-radius:var(--rs);padding:12px 14px;border:1px solid #eeeee8}
+.mk{background:var(--tnc-l);border-radius:var(--rs);padding:12px 14px;border:1px solid rgba(0,121,49,.12)}
 .mk-lbl{font-size:10px;color:var(--mu);margin-bottom:4px;line-height:1.4}
-.mk-val{font-size:24px;font-weight:700;color:var(--dk)}
+.mk-val{font-size:24px;font-weight:700;color:var(--tnc-d)}
 .mk-val.nd{color:#d0cfc8;font-size:18px;font-weight:400}
 .mk-sub{font-size:10px;color:var(--mu2);margin-top:3px}
 
@@ -104,18 +152,18 @@ body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 
 /* ── funnel ────────────────────────────────────────────── */
 .funnel{display:flex;flex-direction:column;gap:6px;padding:4px 0}
-.funnel-step{position:relative;border-radius:var(--rs);overflow:hidden;background:#f8f8f5;border:1px solid #eeeee8;min-height:60px}
+.funnel-step{position:relative;border-radius:var(--rs);overflow:hidden;background:var(--tnc-l);border:1px solid rgba(0,121,49,.12);min-height:60px}
 .funnel-bg{position:absolute;inset:0;opacity:.08}
 .funnel-bar{position:absolute;top:0;bottom:0;left:0;opacity:.18;border-radius:var(--rs);transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
 .funnel-content{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
 .funnel-info{}
-.funnel-name{font-size:13px;font-weight:700;color:var(--tx)}
+.funnel-name{font-size:13px;font-weight:700;color:var(--tnc-d)}
 .funnel-id{font-size:9px;color:var(--mu2);margin-left:5px}
 .funnel-meta{font-size:10px;color:var(--mu);margin-top:2px}
 .funnel-right{text-align:right}
-.funnel-val{font-size:28px;font-weight:700;line-height:1}
+.funnel-val{font-size:28px;font-weight:700;line-height:1;color:var(--tnc-d)}
 .funnel-val.nd{color:var(--mu2);font-size:20px;font-weight:400}
-.funnel-pct{font-size:11px;font-weight:600;margin-top:3px}
+.funnel-pct{font-size:11px;font-weight:700;margin-top:3px}
 
 /* ── table ─────────────────────────────────────────────── */
 .tw{overflow-x:auto;border-radius:var(--rs)}
@@ -146,11 +194,12 @@ tr:hover td{background:#faf9f6}
 .footnote{font-size:10px;color:var(--mu2);margin-top:10px;line-height:1.6;padding-top:8px;border-top:1px solid #f2f1ec}
 
 /* ── summary strip ─────────────────────────────────────── */
-.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding:14px 18px;background:linear-gradient(135deg,rgba(5,61,60,.03),rgba(57,191,178,.05));border:1px solid rgba(57,191,178,.15);border-radius:var(--r);margin-bottom:18px}
-.ss-item{text-align:center}
-.ss-val{font-size:20px;font-weight:700;color:var(--dk)}
-.ss-val.nd{color:var(--mu2);font-size:16px;font-weight:400}
-.ss-lbl{font-size:10px;color:var(--mu);margin-top:2px}
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0;padding:0;background:var(--tnc-d);border-radius:var(--r);margin-bottom:22px;overflow:hidden;box-shadow:var(--sh)}
+.ss-item{text-align:center;padding:16px 10px;position:relative}
+.ss-item+.ss-item::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:rgba(255,255,255,.12)}
+.ss-val{font-size:22px;font-weight:700;color:#fff}
+.ss-val.nd{color:rgba(255,255,255,.35);font-size:17px;font-weight:400}
+.ss-lbl{font-size:10px;color:rgba(255,255,255,.55);margin-top:3px;letter-spacing:.04em}
 
 /* ── animations ────────────────────────────────────────── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -177,26 +226,52 @@ tr:hover td{background:#faf9f6}
 
 <!-- ── TOP ──────────────────────────────────────────────── -->
 <div class="top">
-  <div class="top-left">
-    <div class="top-logo">🌿</div>
-    <div>
-      <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
-      <div class="sub">TNC Brasil · Accenture / GlobalGiving · Monitoramento: Olab</div>
+  <div class="top-bar">
+    <div class="top-left">
+      <!-- TNC Leaf Logo Mark (SVG) -->
+      <div class="top-logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="The Nature Conservancy">
+          <path d="M17 2C9 2 3 9 5 18C7 26 11 30 17 32C23 30 27 26 29 18C31 9 25 2 17 2Z" fill="rgba(255,255,255,0.92)"/>
+          <path d="M17 32L17 11" stroke="#007931" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M17 20L11 14" stroke="#007931" stroke-width="1.1" stroke-linecap="round"/>
+          <path d="M17 25L23 18" stroke="#007931" stroke-width="1.1" stroke-linecap="round"/>
+          <path d="M17 15L13 11" stroke="#007931" stroke-width="0.9" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="top-wordmark">
+        <div class="top-brand">The Nature Conservancy</div>
+        <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
+        <div class="sub">Pará, Brasil · Programa Accenture / GlobalGiving · Monitoramento: Olab</div>
+      </div>
+    </div>
+    <div class="top-meta">
+      <div class="top-stat">
+        <div class="ts-lbl">Quinzena</div>
+        <div class="ts-val" id="hdr-quinzena">—</div>
+      </div>
+      <div class="top-stat">
+        <div class="ts-lbl">Período</div>
+        <div class="ts-val" id="hdr-periodo">—</div>
+      </div>
+      <div class="top-stat">
+        <div class="ts-lbl">Atualizado</div>
+        <div class="ts-val" id="hdr-data">—</div>
+      </div>
     </div>
   </div>
-  <div class="top-meta">
-    <div class="top-stat">
-      <div class="ts-lbl">Quinzena</div>
-      <div class="ts-val" id="hdr-quinzena">—</div>
-    </div>
-    <div class="top-stat">
-      <div class="ts-lbl">Período</div>
-      <div class="ts-val" id="hdr-periodo">—</div>
-    </div>
-    <div class="top-stat">
-      <div class="ts-lbl">Atualizado</div>
-      <div class="ts-val" id="hdr-data">—</div>
-    </div>
+  <div class="top-ribbon">
+    <span class="rb-highlight">TNC Brasil</span>
+    <span class="rb-sep">·</span>
+    <span>Parceiros implementadores:</span>
+    <span>Crescer</span><span class="rb-sep">·</span>
+    <span>Solidaridad</span><span class="rb-sep">·</span>
+    <span>UNICAFES</span><span class="rb-sep">·</span>
+    <span>FUNEP</span><span class="rb-sep">·</span>
+    <span>Sense-Lab</span><span class="rb-sep">·</span>
+    <span>Creditares</span><span class="rb-sep">·</span>
+    <span>ISES</span>
+    <span class="rb-sep" style="margin-left:auto">·</span>
+    <span>Territórios: Transamazônica · Sudeste do Pará</span>
   </div>
 </div>
 
@@ -236,33 +311,33 @@ tr:hover td{background:#faf9f6}
   <div class="sec">
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div></div>
     <div class="kg">
-      <div class="kpi" style="--kpi-accent:var(--dk)">
+      <div class="kpi" style="--kpi-accent:#007931">
         <div class="kpi-top"><div class="kpi-id">1.1.1</div><div class="kpi-ico">👥</div></div>
         <div class="kpi-lbl">Conectadas</div>
         <div class="kpi-val nd" id="k-con">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 1.000 pessoas</div><div class="kpi-pct" id="k-con-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-con"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-con"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tl)">
+      <div class="kpi" style="--kpi-accent:#4aa241">
         <div class="kpi-top"><div class="kpi-id">1.2.1</div><div class="kpi-ico">📈</div></div>
         <div class="kpi-lbl">Melhoradas</div>
         <div class="kpi-val nd" id="k-mel">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 800 pessoas</div><div class="kpi-pct" id="k-mel-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-mel"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-mel"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--bl)">
+      <div class="kpi" style="--kpi-accent:#0c834c">
         <div class="kpi-top"><div class="kpi-id">1.3.1</div><div class="kpi-ico">⭐</div></div>
         <div class="kpi-lbl">Transformadas</div>
         <div class="kpi-val nd" id="k-tra">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150–200 pessoas</div><div class="kpi-pct" id="k-tra-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-tra"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#0c834c" id="b-tra"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tl)">
+      <div class="kpi" style="--kpi-accent:#4aa241">
         <div class="kpi-top"><div class="kpi-id">2.2.2</div><div class="kpi-ico">🔄</div></div>
         <div class="kpi-lbl">Progressão Con → Mel</div>
         <div class="kpi-val nd" id="k-prog">—</div>
         <div class="kpi-footer"><div class="kpi-meta">referência: ≥ 80%</div><div class="kpi-pct" id="k-prog-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prog"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-prog"></div></div>
       </div>
     </div>
   </div>
@@ -270,47 +345,47 @@ tr:hover td{background:#faf9f6}
   <div class="sec">
     <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div></div>
     <div class="kg">
-      <div class="kpi" style="--kpi-accent:var(--dk)">
+      <div class="kpi" style="--kpi-accent:#007931">
         <div class="kpi-top"><div class="kpi-id">1.4.1</div><div class="kpi-ico">🌱</div></div>
         <div class="kpi-lbl">Agricultores com ATER</div>
         <div class="kpi-val nd" id="k-ater">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150 agricultores</div><div class="kpi-pct" id="k-ater-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-ater"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-ater"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tl)">
+      <div class="kpi" style="--kpi-accent:#4aa241">
         <div class="kpi-top"><div class="kpi-id">1.5.1</div><div class="kpi-ico">📋</div></div>
         <div class="kpi-lbl">CARs regularizados</div>
         <div class="kpi-val nd" id="k-car">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~50 propriedades</div><div class="kpi-pct" id="k-car-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-car"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-car"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tl)">
+      <div class="kpi" style="--kpi-accent:#4aa241">
         <div class="kpi-top"><div class="kpi-id">1.6.1</div><div class="kpi-ico">📄</div></div>
         <div class="kpi-lbl">PRADAs elaborados</div>
         <div class="kpi-val nd" id="k-prada">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 50 relatórios</div><div class="kpi-pct" id="k-prada-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prada"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-prada"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--bl)">
+      <div class="kpi" style="--kpi-accent:#2b7bb9">
         <div class="kpi-top"><div class="kpi-id">1.7.2</div><div class="kpi-ico">💰</div></div>
         <div class="kpi-lbl">Projetos crédito submetidos</div>
         <div class="kpi-val nd" id="k-cred">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~40 projetos</div><div class="kpi-pct" id="k-cred-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-cred"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#2b7bb9" id="b-cred"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tr)">
+      <div class="kpi" style="--kpi-accent:#7d6447">
         <div class="kpi-top"><div class="kpi-id">1.8.1</div><div class="kpi-ico">🏡</div></div>
         <div class="kpi-lbl">UDs implantadas</div>
         <div class="kpi-val nd" id="k-uds">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–10 UDs</div><div class="kpi-pct" id="k-uds-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tr)" id="b-uds"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#7d6447" id="b-uds"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#543017">
+      <div class="kpi" style="--kpi-accent:#0c834c">
         <div class="kpi-top"><div class="kpi-id">1.9.1 · 1.10.1</div><div class="kpi-ico">🤝</div></div>
         <div class="kpi-lbl">Organizações + Redes</div>
         <div class="kpi-val nd" id="k-org">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–12 org · 2 redes</div><div class="kpi-pct" id="k-org-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#543017" id="b-org"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:#0c834c" id="b-org"></div></div>
       </div>
     </div>
   </div>
@@ -741,13 +816,13 @@ function initCharts(d){
   const sMel = d.seriesMel || [12,35,55,78,104,130,152,168,180,189,null,null,null];
   const sTra = d.seriesTra || [3,7,12,18,24,29,33,37,39,41,null,null,null];
 
-  // evolução pessoas
+  // evolução pessoas — TNC brand colors
   new Chart(document.getElementById('ch-pessoas'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'Conectadas',    data:sCon,borderColor:'#053d3c',backgroundColor:'rgba(5,61,60,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#053d3c',borderWidth:2.5,pointHoverRadius:6},
-      {label:'Melhoradas',    data:sMel,borderColor:'#39bfb2',backgroundColor:'rgba(57,191,178,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#39bfb2',borderWidth:2.5,pointHoverRadius:6},
-      {label:'Transformadas', data:sTra,borderColor:'#438b9e',backgroundColor:'rgba(67,139,158,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#438b9e',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Conectadas',    data:sCon,borderColor:'#007931',backgroundColor:'rgba(0,121,49,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#007931',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Melhoradas',    data:sMel,borderColor:'#4aa241',backgroundColor:'rgba(74,162,65,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#4aa241',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Transformadas', data:sTra,borderColor:'#0c834c',backgroundColor:'rgba(12,131,76,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#0c834c',borderWidth:2.5,pointHoverRadius:6},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{intersect:false,mode:'index'},
@@ -762,7 +837,7 @@ function initCharts(d){
     }
   });
 
-  // progresso eixos P2
+  // progresso eixos P2 — TNC brand colors
   const eixosPct = [
     pct(d.ater,METAS.ater), pct(d.car,METAS.car), pct(d.prada,METAS.prada),
     pct(d.cred,METAS.cred), pct(d.uds,METAS.uds), 0, 0
@@ -772,9 +847,9 @@ function initCharts(d){
     data:{
       labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Crédito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
       datasets:[{label:'% realizado',data:eixosPct,
-        backgroundColor:['#053d3c','#39bfb2','#2ea89c','#438b9e','#c25730','#543017','#c7ab8c'],
+        backgroundColor:['#007931','#4aa241','#4aa241','#2b7bb9','#7d6447','#0c834c','#3d8c20'],
         borderRadius:6,barThickness:20,
-        hoverBackgroundColor:['#07514f','#2ea89c','#268f84','#367385','#a84828','#3d2210','#b09a7c']}]
+        hoverBackgroundColor:['#005a23','#3d912f','#3d912f','#1e5f8a','#5e4a30','#08603a','#2e6a18']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
@@ -796,9 +871,9 @@ function initCharts(d){
     data:{
       labels:parcLabels,
       datasets:[{label:'Conectadas',data:parcData,
-        backgroundColor:['#053d3c','#39bfb2','#438b9e','#c25730','#543017','#c7ab8c','#1a5c1a'],
+        backgroundColor:['#007931','#4aa241','#0c834c','#2b7bb9','#7d6447','#3d8c20','#004f20'],
         borderRadius:6,barThickness:24,
-        hoverBackgroundColor:['#07514f','#2ea89c','#367385','#a84828','#3d2210','#b09a7c','#247224']}]
+        hoverBackgroundColor:['#005a23','#3d912f','#08603a','#1e5f8a','#5e4a30','#2e6a18','#003316']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
