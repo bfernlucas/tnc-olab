@@ -6,110 +6,170 @@
 <title>Dashboard MEL · TNC Agricultura Familiar no Pará</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* ── reset ─────────────────────────────────────────── */
+/* ── reset & tokens ────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dk:#053d3c;--tl:#39bfb2;--bl:#438b9e;--gn:#1a5c1a;
-  --tr:#c25730;--bg:#f8f8f6;--wh:#fff;--bd:#d3d1c7;
-  --tx:#1a1a1a;--mu:#777;--r:10px;--rs:6px;
-  font-family:'Segoe UI',Arial,sans-serif;
+  --dk:#053d3c;--dk2:#07514f;--tl:#39bfb2;--tl2:#2ea89c;
+  --bl:#438b9e;--gn:#1a5c1a;--tr:#c25730;--am:#d4900a;
+  --bg:#f2f3f0;--wh:#ffffff;--bd:#e2e0d8;
+  --tx:#1a1a1a;--tx2:#444;--mu:#7a7a7a;--mu2:#b0afa8;
+  --r:12px;--rs:8px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --sh-md:0 2px 8px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.06);
+  font-family:'Segoe UI',-apple-system,Arial,sans-serif;
 }
 body{background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 
-/* ── topbar ─────────────────────────────────────────── */
-.top{background:var(--dk);color:#fff;padding:13px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.top h1{font-size:15px;font-weight:700;letter-spacing:-.01em}
-.top .sub{font-size:11px;color:var(--tl);margin-top:2px}
-.top-right{text-align:right;font-size:11px;line-height:1.7}
-.top-right strong{color:#fff}
+/* ── topbar ────────────────────────────────────────────── */
+.top{background:linear-gradient(135deg,var(--dk) 0%,var(--dk2) 100%);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 2px 12px rgba(5,61,60,.3)}
+.top-left{display:flex;align-items:center;gap:14px}
+.top-logo{width:38px;height:38px;background:rgba(57,191,178,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid rgba(57,191,178,.25)}
+.top h1{font-size:16px;font-weight:700;letter-spacing:-.01em}
+.top .sub{font-size:11px;color:rgba(57,191,178,.85);margin-top:2px}
+.top-meta{display:flex;gap:12px;align-items:center}
+.top-stat{text-align:center;padding:8px 16px;background:rgba(255,255,255,.07);border-radius:var(--rs);border:1px solid rgba(255,255,255,.1)}
+.top-stat .ts-lbl{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.07em}
+.top-stat .ts-val{font-size:13px;font-weight:700;color:#fff;margin-top:1px}
 
-/* ── fonte banner ───────────────────────────────────── */
-.fonte-bar{background:#e0f4f1;border-bottom:1px solid #b0dbd7;padding:7px 24px;font-size:11px;color:#085041;display:flex;align-items:center;gap:8px}
+/* ── fonte banner ──────────────────────────────────────── */
+.fonte-bar{background:#e8f5f3;border-bottom:1px solid #c5e5e1;padding:7px 28px;font-size:11px;color:#085041;display:flex;align-items:center;gap:8px}
 .fonte-bar b{font-weight:600}
-.fonte-bar .url-pill{background:#fff;border:1px solid #b0dbd7;border-radius:4px;padding:2px 8px;font-family:monospace;font-size:10px;color:#085041;cursor:text}
+.fonte-bar .url-pill{background:#fff;border:1px solid #c5e5e1;border-radius:4px;padding:2px 10px;font-family:monospace;font-size:10px;color:#085041}
 
-/* ── tabs ───────────────────────────────────────────── */
-.tabs{background:#f0f0ee;border-bottom:1px solid var(--bd);display:flex;gap:2px;padding:10px 20px 0;overflow-x:auto}
-.tab{padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer;border-radius:var(--rs) var(--rs) 0 0;color:var(--mu);border:1px solid transparent;border-bottom:none;background:none;white-space:nowrap}
-.tab.on{background:var(--wh);color:var(--dk);border-color:var(--bd)}
-.tab:hover:not(.on){background:#e5e5e2}
+/* ── tabs ──────────────────────────────────────────────── */
+.tabs{background:#fff;border-bottom:2px solid var(--bd);display:flex;gap:0;padding:0 24px;overflow-x:auto}
+.tab{padding:13px 20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--mu);border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-2px;display:flex;align-items:center;gap:7px}
+.tab .tab-ico{font-size:14px;opacity:.6}
+.tab.on{color:var(--dk);border-bottom-color:var(--tl)}
+.tab.on .tab-ico{opacity:1}
+.tab:hover:not(.on){color:var(--dk);background:#f8f8f6}
 
-/* ── main ───────────────────────────────────────────── */
-.main{padding:20px;max-width:1440px;margin:0 auto}
+/* ── main ──────────────────────────────────────────────── */
+.main{padding:24px 28px;max-width:1440px;margin:0 auto}
 .panel{display:none}.panel.on{display:block}
-.sec{margin-bottom:22px}
-.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu);margin-bottom:10px}
+.sec{margin-bottom:26px}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-accent{height:3px;width:28px;border-radius:2px;background:var(--tl)}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mu)}
 
-/* ── alerta ─────────────────────────────────────────── */
-.alert{display:flex;gap:10px;padding:9px 14px;border-radius:var(--rs);font-size:12px;margin-bottom:8px}
-.alert.info{background:#e0f4f1;border-left:3px solid var(--tl);color:#085041}
-.alert.warn{background:#fdf3e0;border-left:3px solid #c7ab8c;color:#6b4c1a}
+/* ── alerta ────────────────────────────────────────────── */
+.alert{display:flex;gap:10px;padding:11px 16px;border-radius:var(--rs);font-size:12px;margin-bottom:10px;align-items:flex-start}
+.alert.info{background:#e8f5f3;border-left:3px solid var(--tl);color:#085041}
+.alert.warn{background:#fef3dd;border-left:3px solid var(--am);color:#6b4c1a}
 
-/* ── kpi grid ───────────────────────────────────────── */
-.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.kpi{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px}
-.kpi-lbl{font-size:11px;color:var(--mu);margin-bottom:5px}
-.kpi-id{font-size:9px;color:#bbb;font-weight:600;letter-spacing:.05em;margin-bottom:3px}
-.kpi-val{font-size:28px;font-weight:700;color:var(--dk);line-height:1}
-.kpi-val.nd{color:#ccc;font-size:20px;font-weight:400}
-.kpi-meta{font-size:10px;color:var(--mu);margin-top:4px}
-.kpi-bar{height:4px;background:#eee;border-radius:2px;margin-top:8px}
-.kpi-fill{height:4px;border-radius:2px;width:0}
+/* ── kpi grid ──────────────────────────────────────────── */
+.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px}
+.kpi{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-accent,var(--tl))}
+.kpi:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.kpi-id{font-size:9px;color:var(--mu2);font-weight:700;letter-spacing:.06em;background:#f4f4f2;padding:2px 7px;border-radius:4px}
+.kpi-ico{font-size:18px;opacity:.55}
+.kpi-lbl{font-size:11px;color:var(--mu);margin-bottom:6px;line-height:1.3}
+.kpi-val{font-size:32px;font-weight:700;color:var(--dk);line-height:1}
+.kpi-val.nd{color:#d0cfc8;font-size:22px;font-weight:400}
+.kpi-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.kpi-meta{font-size:10px;color:var(--mu2)}
+.kpi-pct{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;display:none}
+.kpi-bar{height:6px;background:#eeeee8;border-radius:3px;margin-top:10px;overflow:hidden}
+.kpi-fill{height:6px;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
 
-/* ── 2-col / 3-col grids ────────────────────────────── */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* ── grids ─────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 
-/* ── card ───────────────────────────────────────────── */
-.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
-.card-ttl{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:10px}
-.card-id{font-size:9px;color:#bbb;font-weight:600;letter-spacing:.05em;margin-left:6px;vertical-align:middle}
-.hr{height:1px;background:var(--bd);margin:10px 0 12px}
+/* ── card ──────────────────────────────────────────────── */
+.card{background:var(--wh);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh)}
+.card-ttl{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-id{font-size:9px;color:var(--mu2);font-weight:600;letter-spacing:.05em;background:#f4f4f2;padding:2px 7px;border-radius:4px}
+.hr{height:1px;background:var(--bd);margin:12px 0 14px}
 
-/* ── mini-kpi ───────────────────────────────────────── */
-.mk{background:#f8f8f6;border-radius:var(--rs);padding:10px 12px}
-.mk-lbl{font-size:10px;color:var(--mu);margin-bottom:3px}
-.mk-val{font-size:22px;font-weight:700}
-.mk-val.nd{color:#ccc;font-size:16px;font-weight:400}
+/* ── mini-kpi ──────────────────────────────────────────── */
+.mk{background:#f8f8f5;border-radius:var(--rs);padding:12px 14px;border:1px solid #eeeee8}
+.mk-lbl{font-size:10px;color:var(--mu);margin-bottom:4px;line-height:1.4}
+.mk-val{font-size:24px;font-weight:700;color:var(--dk)}
+.mk-val.nd{color:#d0cfc8;font-size:18px;font-weight:400}
+.mk-sub{font-size:10px;color:var(--mu2);margin-top:3px}
 
-/* ── progress row ───────────────────────────────────── */
-.pr{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.pr-lbl{font-size:12px;color:var(--mu);width:160px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pr-id{font-size:9px;color:#ccc;margin-left:3px}
-.pr-bg{flex:1;height:8px;background:#eee;border-radius:4px}
-.pr-fill{height:8px;border-radius:4px;width:0}
-.pr-v{font-size:12px;font-weight:700;color:var(--tx);width:38px;text-align:right}
+/* ── progress row ──────────────────────────────────────── */
+.pr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.pr:last-of-type{margin-bottom:0}
+.pr-lbl{font-size:12px;color:var(--mu);width:170px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-id{font-size:9px;color:var(--mu2);margin-left:4px}
+.pr-bg{flex:1;height:10px;background:#eeeee8;border-radius:5px;overflow:hidden}
+.pr-fill{height:10px;border-radius:5px;width:0;transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
+.pr-v{font-size:12px;font-weight:700;color:var(--tx);width:44px;text-align:right}
+.pr-v.nd{color:var(--mu2);font-weight:400}
 
-/* ── table ──────────────────────────────────────────── */
-.tw{overflow-x:auto}
+/* ── funnel ────────────────────────────────────────────── */
+.funnel{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.funnel-step{position:relative;border-radius:var(--rs);overflow:hidden;background:#f8f8f5;border:1px solid #eeeee8;min-height:60px}
+.funnel-bg{position:absolute;inset:0;opacity:.08}
+.funnel-bar{position:absolute;top:0;bottom:0;left:0;opacity:.18;border-radius:var(--rs);transition:width 1.2s cubic-bezier(.25,.8,.25,1)}
+.funnel-content{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+.funnel-info{}
+.funnel-name{font-size:13px;font-weight:700;color:var(--tx)}
+.funnel-id{font-size:9px;color:var(--mu2);margin-left:5px}
+.funnel-meta{font-size:10px;color:var(--mu);margin-top:2px}
+.funnel-right{text-align:right}
+.funnel-val{font-size:28px;font-weight:700;line-height:1}
+.funnel-val.nd{color:var(--mu2);font-size:20px;font-weight:400}
+.funnel-pct{font-size:11px;font-weight:600;margin-top:3px}
+
+/* ── table ─────────────────────────────────────────────── */
+.tw{overflow-x:auto;border-radius:var(--rs)}
 table{width:100%;border-collapse:collapse;font-size:12px}
-th{text-align:left;padding:8px 10px;color:var(--mu);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--bd);white-space:nowrap}
-td{padding:9px 10px;border-bottom:1px solid #f0f0ee;vertical-align:middle}
+thead{background:#f8f8f5}
+th{text-align:left;padding:10px 12px;color:var(--mu);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--bd);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid #f2f1ec;vertical-align:middle}
 tr:last-child td{border:none}
-tr:hover td{background:#fafaf8}
+tr:hover td{background:#faf9f6}
 
-/* ── badge ──────────────────────────────────────────── */
-.bdg{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.bdg-ok{background:#e0f4e0;color:#1a5c1a}
-.bdg-warn{background:#fdf3e0;color:#7a4e00}
-.bdg-nd{background:#f1efe8;color:#999}
-.bdg-tl{background:#e0f4f1;color:#085041}
+/* ── badge ─────────────────────────────────────────────── */
+.bdg{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.bdg::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.bdg-ok{background:#e4f6e4;color:#1a5c1a}.bdg-ok::before{background:#1a5c1a}
+.bdg-warn{background:#fef3dd;color:#7a4e00}.bdg-warn::before{background:var(--am)}
+.bdg-nd{background:#f4f3ef;color:#999}.bdg-nd::before{background:#ccc}
+.bdg-tl{background:#e4f5f3;color:#085041}.bdg-tl::before{background:var(--tl)}
 
-/* ── chip ───────────────────────────────────────────── */
-.chip{display:inline-block;background:#f1efe8;color:#444;border-radius:10px;padding:1px 7px;font-size:10px;margin:1px}
+/* ── chip ──────────────────────────────────────────────── */
+.chip{display:inline-block;background:#eef0ec;color:#555;border-radius:10px;padding:2px 9px;font-size:10px;font-weight:600;margin:1px}
 
-/* ── radar placeholder ──────────────────────────────── */
-.radar-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;background:#fafaf8;border-radius:var(--rs);color:var(--mu);font-size:11px;gap:6px}
-.radar-ico{font-size:36px;opacity:.35}
+/* ── radar placeholder ─────────────────────────────────── */
+.radar-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;background:linear-gradient(135deg,#f8f8f5 0%,#f2f3f0 100%);border-radius:var(--rs);color:var(--mu);font-size:12px;gap:8px;border:2px dashed var(--bd)}
+.radar-ico{font-size:40px;opacity:.3}
+.radar-sub{font-size:10px;color:var(--mu2);text-align:center;max-width:220px}
 
-/* ── nota rodapé ────────────────────────────────────── */
-.footnote{font-size:10px;color:#aaa;margin-top:8px;line-height:1.5}
+/* ── nota rodapé ───────────────────────────────────────── */
+.footnote{font-size:10px;color:var(--mu2);margin-top:10px;line-height:1.6;padding-top:8px;border-top:1px solid #f2f1ec}
 
-/* ── responsive ─────────────────────────────────────── */
-@media(max-width:780px){
+/* ── summary strip ─────────────────────────────────────── */
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;padding:14px 18px;background:linear-gradient(135deg,rgba(5,61,60,.03),rgba(57,191,178,.05));border:1px solid rgba(57,191,178,.15);border-radius:var(--r);margin-bottom:18px}
+.ss-item{text-align:center}
+.ss-val{font-size:20px;font-weight:700;color:var(--dk)}
+.ss-val.nd{color:var(--mu2);font-size:16px;font-weight:400}
+.ss-lbl{font-size:10px;color:var(--mu);margin-top:2px}
+
+/* ── animations ────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel.on>.sec,.panel.on>.g2,.panel.on>.summary-strip{animation:fadeUp .3s ease-out both}
+.panel.on>*:nth-child(2){animation-delay:.04s}
+.panel.on>*:nth-child(3){animation-delay:.08s}
+.panel.on>*:nth-child(4){animation-delay:.12s}
+.panel.on>*:nth-child(5){animation-delay:.16s}
+
+/* ── responsive ────────────────────────────────────────── */
+@media(max-width:900px){
   .kg{grid-template-columns:repeat(2,1fr)}
-  .g2,.g3{grid-template-columns:1fr}
-  .top{flex-direction:column;gap:6px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .top{flex-direction:column;align-items:flex-start;gap:12px}
+  .top-meta{flex-wrap:wrap;gap:8px}
+  .main{padding:16px}
+  .tabs{padding:0 16px}
+  .fonte-bar{padding:7px 16px}
+  .summary-strip{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -117,14 +177,26 @@ tr:hover td{background:#fafaf8}
 
 <!-- ── TOP ──────────────────────────────────────────────── -->
 <div class="top">
-  <div>
-    <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
-    <div class="sub">TNC Brasil · Accenture / GlobalGiving · Monitoramento: Olab</div>
+  <div class="top-left">
+    <div class="top-logo">🌿</div>
+    <div>
+      <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
+      <div class="sub">TNC Brasil · Accenture / GlobalGiving · Monitoramento: Olab</div>
+    </div>
   </div>
-  <div class="top-right">
-    <strong id="hdr-quinzena">Quinzena —</strong><br>
-    Período: <span id="hdr-periodo">—</span><br>
-    Atualizado: <span id="hdr-data">—</span>
+  <div class="top-meta">
+    <div class="top-stat">
+      <div class="ts-lbl">Quinzena</div>
+      <div class="ts-val" id="hdr-quinzena">—</div>
+    </div>
+    <div class="top-stat">
+      <div class="ts-lbl">Período</div>
+      <div class="ts-val" id="hdr-periodo">—</div>
+    </div>
+    <div class="top-stat">
+      <div class="ts-lbl">Atualizado</div>
+      <div class="ts-val" id="hdr-data">—</div>
+    </div>
   </div>
 </div>
 
@@ -137,11 +209,11 @@ tr:hover td{background:#fafaf8}
 
 <!-- ── TABS ─────────────────────────────────────────────── -->
 <div class="tabs">
-  <button class="tab on"  onclick="tab('geral',this)">Visão Geral</button>
-  <button class="tab"     onclick="tab('individuos',this)">Indivíduos · P1</button>
-  <button class="tab"     onclick="tab('p2',this)">Desenv. Territorial · P2</button>
-  <button class="tab"     onclick="tab('resultados',this)">Resultados CP / MP</button>
-  <button class="tab"     onclick="tab('qualidade',this)">Qualidade dos Dados</button>
+  <button class="tab on"  onclick="tab('geral',this)"><span class="tab-ico">📊</span> Visão Geral</button>
+  <button class="tab"     onclick="tab('individuos',this)"><span class="tab-ico">👥</span> Indivíduos · P1</button>
+  <button class="tab"     onclick="tab('p2',this)"><span class="tab-ico">🌍</span> Desenv. Territorial · P2</button>
+  <button class="tab"     onclick="tab('resultados',this)"><span class="tab-ico">🎯</span> Resultados CP / MP</button>
+  <button class="tab"     onclick="tab('qualidade',this)"><span class="tab-ico">✅</span> Qualidade dos Dados</button>
 </div>
 
 <div class="main">
@@ -153,83 +225,91 @@ tr:hover td{background:#fafaf8}
 
   <div id="alertas" class="sec"></div>
 
+  <!-- resumo rápido -->
+  <div class="summary-strip" id="summary-strip">
+    <div class="ss-item"><div class="ss-val nd" id="ss-total">—</div><div class="ss-lbl">Total pessoas alcançadas</div></div>
+    <div class="ss-item"><div class="ss-val nd" id="ss-prog">—</div><div class="ss-lbl">Taxa de progressão</div></div>
+    <div class="ss-item"><div class="ss-val nd" id="ss-eixos">—</div><div class="ss-lbl">Eixos P2 ativos</div></div>
+    <div class="ss-item"><div class="ss-val nd" id="ss-parceiros">—</div><div class="ss-lbl">Parceiros reportando</div></div>
+  </div>
+
   <div class="sec">
-    <div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div></div>
     <div class="kg">
-      <div class="kpi">
-        <div class="kpi-id">1.1.1</div>
+      <div class="kpi" style="--kpi-accent:var(--dk)">
+        <div class="kpi-top"><div class="kpi-id">1.1.1</div><div class="kpi-ico">👥</div></div>
         <div class="kpi-lbl">Conectadas</div>
         <div class="kpi-val nd" id="k-con">—</div>
-        <div class="kpi-meta">meta: 1.000 pessoas</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 1.000 pessoas</div><div class="kpi-pct" id="k-con-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-con"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.2.1</div>
+      <div class="kpi" style="--kpi-accent:var(--tl)">
+        <div class="kpi-top"><div class="kpi-id">1.2.1</div><div class="kpi-ico">📈</div></div>
         <div class="kpi-lbl">Melhoradas</div>
         <div class="kpi-val nd" id="k-mel">—</div>
-        <div class="kpi-meta">meta: 800 pessoas</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 800 pessoas</div><div class="kpi-pct" id="k-mel-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-mel"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.3.1</div>
+      <div class="kpi" style="--kpi-accent:var(--bl)">
+        <div class="kpi-top"><div class="kpi-id">1.3.1</div><div class="kpi-ico">⭐</div></div>
         <div class="kpi-lbl">Transformadas</div>
         <div class="kpi-val nd" id="k-tra">—</div>
-        <div class="kpi-meta">meta: 150–200 pessoas</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 150–200 pessoas</div><div class="kpi-pct" id="k-tra-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-tra"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">2.2.2</div>
+      <div class="kpi" style="--kpi-accent:var(--tl)">
+        <div class="kpi-top"><div class="kpi-id">2.2.2</div><div class="kpi-ico">🔄</div></div>
         <div class="kpi-lbl">Progressão Con → Mel</div>
         <div class="kpi-val nd" id="k-prog">—</div>
-        <div class="kpi-meta">referência: ≥ 80%</div>
+        <div class="kpi-footer"><div class="kpi-meta">referência: ≥ 80%</div><div class="kpi-pct" id="k-prog-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prog"></div></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div></div>
     <div class="kg">
-      <div class="kpi">
-        <div class="kpi-id">1.4.1</div>
+      <div class="kpi" style="--kpi-accent:var(--dk)">
+        <div class="kpi-top"><div class="kpi-id">1.4.1</div><div class="kpi-ico">🌱</div></div>
         <div class="kpi-lbl">Agricultores com ATER</div>
         <div class="kpi-val nd" id="k-ater">—</div>
-        <div class="kpi-meta">meta: 150 agricultores</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 150 agricultores</div><div class="kpi-pct" id="k-ater-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="b-ater"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.5.1</div>
+      <div class="kpi" style="--kpi-accent:var(--tl)">
+        <div class="kpi-top"><div class="kpi-id">1.5.1</div><div class="kpi-ico">📋</div></div>
         <div class="kpi-lbl">CARs regularizados</div>
         <div class="kpi-val nd" id="k-car">—</div>
-        <div class="kpi-meta">meta: ~50 propriedades</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: ~50 propriedades</div><div class="kpi-pct" id="k-car-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-car"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.6.1</div>
+      <div class="kpi" style="--kpi-accent:var(--tl)">
+        <div class="kpi-top"><div class="kpi-id">1.6.1</div><div class="kpi-ico">📄</div></div>
         <div class="kpi-lbl">PRADAs elaborados</div>
         <div class="kpi-val nd" id="k-prada">—</div>
-        <div class="kpi-meta">meta: 50 relatórios</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 50 relatórios</div><div class="kpi-pct" id="k-prada-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="b-prada"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.7.2</div>
+      <div class="kpi" style="--kpi-accent:var(--bl)">
+        <div class="kpi-top"><div class="kpi-id">1.7.2</div><div class="kpi-ico">💰</div></div>
         <div class="kpi-lbl">Projetos crédito submetidos</div>
         <div class="kpi-val nd" id="k-cred">—</div>
-        <div class="kpi-meta">meta: ~40 projetos</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: ~40 projetos</div><div class="kpi-pct" id="k-cred-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--bl)" id="b-cred"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.8.1</div>
+      <div class="kpi" style="--kpi-accent:var(--tr)">
+        <div class="kpi-top"><div class="kpi-id">1.8.1</div><div class="kpi-ico">🏡</div></div>
         <div class="kpi-lbl">UDs implantadas</div>
         <div class="kpi-val nd" id="k-uds">—</div>
-        <div class="kpi-meta">meta: 8–10 UDs</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 8–10 UDs</div><div class="kpi-pct" id="k-uds-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tr)" id="b-uds"></div></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-id">1.9.1 · 1.10.1</div>
+      <div class="kpi" style="--kpi-accent:#543017">
+        <div class="kpi-top"><div class="kpi-id">1.9.1 · 1.10.1</div><div class="kpi-ico">🤝</div></div>
         <div class="kpi-lbl">Organizações + Redes</div>
         <div class="kpi-val nd" id="k-org">—</div>
-        <div class="kpi-meta">meta: 8–12 org · 2 redes</div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 8–12 org · 2 redes</div><div class="kpi-pct" id="k-org-pct"></div></div>
         <div class="kpi-bar"><div class="kpi-fill" style="background:#543017" id="b-org"></div></div>
       </div>
     </div>
@@ -237,13 +317,13 @@ tr:hover td{background:#fafaf8}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
-      <div style="position:relative;height:210px"><canvas id="ch-pessoas"></canvas></div>
+      <div class="card-ttl">📉 Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
+      <div style="position:relative;height:240px"><canvas id="ch-pessoas"></canvas></div>
       <div class="footnote">Por quinzena · fonte: base consolidada Olab · meta indicada pela linha tracejada</div>
     </div>
     <div class="card">
-      <div class="card-ttl">Progresso por eixo do P2 (% da meta)</div>
-      <div style="position:relative;height:210px"><canvas id="ch-eixos"></canvas></div>
+      <div class="card-ttl">📊 Progresso por eixo do P2 (% da meta)</div>
+      <div style="position:relative;height:240px"><canvas id="ch-eixos"></canvas></div>
       <div class="footnote">Fonte: relatórios dos parceiros sistematizados pela Olab</div>
     </div>
   </div>
@@ -257,30 +337,59 @@ tr:hover td{background:#fafaf8}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
+      <div class="card-ttl">🔽 Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
       <div class="hr"></div>
-      <div class="pr">
-        <span class="pr-lbl">Conectadas<span class="pr-id">1.1.1</span></span>
-        <div class="pr-bg"><div class="pr-fill" style="background:var(--dk)" id="pf-con"></div></div>
-        <span class="pr-v nd" id="pv-con">—</span>
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-bg" style="background:var(--dk)"></div>
+          <div class="funnel-bar" style="background:var(--dk)" id="pf-con"></div>
+          <div class="funnel-content">
+            <div class="funnel-info">
+              <div class="funnel-name">Conectadas <span class="funnel-id">1.1.1</span></div>
+              <div class="funnel-meta">meta: 1.000 pessoas</div>
+            </div>
+            <div class="funnel-right">
+              <div class="funnel-val nd" id="pv-con">—</div>
+              <div class="funnel-pct" style="color:var(--dk)" id="fpct-con"></div>
+            </div>
+          </div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-bg" style="background:var(--tl)"></div>
+          <div class="funnel-bar" style="background:var(--tl)" id="pf-mel"></div>
+          <div class="funnel-content">
+            <div class="funnel-info">
+              <div class="funnel-name">Melhoradas <span class="funnel-id">1.2.1</span></div>
+              <div class="funnel-meta">meta: 800 pessoas</div>
+            </div>
+            <div class="funnel-right">
+              <div class="funnel-val nd" id="pv-mel">—</div>
+              <div class="funnel-pct" style="color:var(--tl2)" id="fpct-mel"></div>
+            </div>
+          </div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-bg" style="background:var(--bl)"></div>
+          <div class="funnel-bar" style="background:var(--bl)" id="pf-tra"></div>
+          <div class="funnel-content">
+            <div class="funnel-info">
+              <div class="funnel-name">Transformadas <span class="funnel-id">1.3.1</span></div>
+              <div class="funnel-meta">meta: 150–200 pessoas</div>
+            </div>
+            <div class="funnel-right">
+              <div class="funnel-val nd" id="pv-tra">—</div>
+              <div class="funnel-pct" style="color:var(--bl)" id="fpct-tra"></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="pr">
-        <span class="pr-lbl">Melhoradas<span class="pr-id">1.2.1</span></span>
-        <div class="pr-bg"><div class="pr-fill" style="background:var(--tl)" id="pf-mel"></div></div>
-        <span class="pr-v nd" id="pv-mel">—</span>
-      </div>
-      <div class="pr">
-        <span class="pr-lbl">Transformadas<span class="pr-id">1.3.1</span></span>
-        <div class="pr-bg"><div class="pr-fill" style="background:var(--bl)" id="pf-tra"></div></div>
-        <span class="pr-v nd" id="pv-tra">—</span>
-      </div>
-      <div class="footnote" style="margin-top:10px">
+      <div class="footnote">
         Controle de unicidade por CPF/nome + município · Coleta quinzenal pelos parceiros · Consolidação Olab
       </div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
+      <div class="card-ttl">📋 Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:12px">
         <div class="mk"><div class="mk-lbl">% com prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
@@ -296,22 +405,22 @@ tr:hover td{background:#fafaf8}
   </div>
 
   <div class="sec">
-    <div class="sec-lbl">Contribuição por parceiro — Conectadas (1.1.1)</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Contribuição por parceiro — Conectadas (1.1.1)</div></div>
     <div class="card">
-      <div class="card-ttl">Pessoas conectadas por parceiro implementador</div>
+      <div class="card-ttl">👥 Pessoas conectadas por parceiro implementador</div>
       <div class="hr"></div>
-      <div style="position:relative;height:220px"><canvas id="ch-parceiros"></canvas></div>
+      <div style="position:relative;height:240px"><canvas id="ch-parceiros"></canvas></div>
       <div class="footnote">Dados virão da planilha vinculada — cada parceiro reporta quinzenalmente</div>
     </div>
   </div>
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
+      <div class="card-ttl">🌱 ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
       <div class="hr"></div>
       <div class="pr"><span class="pr-lbl">Crescer</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">Solidaridad</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
-      <div style="margin-top:6px;padding-top:10px;border-top:1px solid #f0f0ee">
+      <div style="margin-top:8px;padding-top:12px;border-top:1px solid #f0f0ee">
         <div class="pr"><span class="pr-lbl">Total agricultores (meta 150)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)" id="pf-ater"></div></div><span class="pr-v nd" id="pv-ater">—</span></div>
         <div class="pr"><span class="pr-lbl">Total visitas realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c"></div></div><span class="pr-v nd">—</span></div>
       </div>
@@ -319,11 +428,11 @@ tr:hover td{background:#fafaf8}
     </div>
 
     <div class="card">
-      <div class="card-ttl">Regularização ambiental <span class="card-id">1.5.1 · 1.6.1</span></div>
+      <div class="card-ttl">🌿 Regularização ambiental <span class="card-id">1.5.1 · 1.6.1</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
-        <div class="mk"><div class="mk-lbl">CARs regularizados (1.5.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:3px">meta: ~50</div></div>
-        <div class="mk"><div class="mk-lbl">PRADAs elaborados (1.6.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:3px">meta: 50</div></div>
+        <div class="mk"><div class="mk-lbl">CARs regularizados (1.5.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: ~50</div></div>
+        <div class="mk"><div class="mk-lbl">PRADAs elaborados (1.6.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 50</div></div>
       </div>
       <div class="pr"><span class="pr-lbl">CARs (Solidaridad + Crescer)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)" id="pf-car"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">PRADAs (Solidaridad)</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c" id="pf-prada"></div></div><span class="pr-v nd">—</span></div>
@@ -340,22 +449,22 @@ tr:hover td{background:#fafaf8}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Crédito rural <span class="card-id">1.7.1 · 1.7.2 · 2.4.1 · 2.4.2</span></div>
+      <div class="card-ttl">💰 Crédito rural <span class="card-id">1.7.1 · 1.7.2 · 2.4.1 · 2.4.2</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
         <div class="mk"><div class="mk-lbl">Dossiês elaborados (1.7.1)</div><div class="mk-val nd">—</div></div>
         <div class="mk"><div class="mk-lbl">Submetidos às inst. financeiras (1.7.2)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Aprovados (2.4.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: ~40</div></div>
+        <div class="mk"><div class="mk-lbl">Aprovados (2.4.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: ~40</div></div>
         <div class="mk"><div class="mk-lbl">Valor total acessado R$ (2.4.2)</div><div class="mk-val nd">—</div></div>
       </div>
       <div class="footnote">Creditares + AgroOpen · Mensal · Parceiros: Creditares, Solidaridad, UNICAFES</div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Unidades Demonstrativas <span class="card-id">1.8.1 – 1.8.4</span></div>
+      <div class="card-ttl">🏡 Unidades Demonstrativas <span class="card-id">1.8.1 – 1.8.4</span></div>
       <div class="hr"></div>
       <div class="g3" style="margin-bottom:14px">
-        <div class="mk"><div class="mk-lbl">UDs implantadas (1.8.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 8–10</div></div>
+        <div class="mk"><div class="mk-lbl">UDs implantadas (1.8.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 8–10</div></div>
         <div class="mk"><div class="mk-lbl">Treinamentos realizados (1.8.2)</div><div class="mk-val nd">—</div></div>
         <div class="mk"><div class="mk-lbl">Tecnologias aplicadas (1.8.3)</div><div class="mk-val nd">—</div></div>
       </div>
@@ -366,41 +475,41 @@ tr:hover td{background:#fafaf8}
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Maturidade institucional — KSI D1 <span class="card-id">1.9.1 · 2.5.1 – 2.5.4</span></div>
+      <div class="card-ttl">🏛 Maturidade institucional — KSI D1 <span class="card-id">1.9.1 · 2.5.1 – 2.5.4</span></div>
       <div class="hr"></div>
       <div class="pr"><span class="pr-lbl">Org. com plano estratégico (1.9.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">Cooperados ativos (2.5.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">Parcerias firmadas (2.5.2)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Editais acessados (2.5.3)</span><div class="pr-bg"><div class="pr-fill" style="background:#c25730)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Editais acessados (2.5.3)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
       <div class="pr"><span class="pr-lbl">Novos mercados (2.5.4)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
       <div class="footnote">Semestral · ISES, UNICAFES, Terra Preta · Verificação documental Olab</div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
+      <div class="card-ttl">🤝 Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
-        <div class="mk"><div class="mk-lbl">Redes ativas (1.10.1 / 2.6.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 2 redes</div></div>
-        <div class="mk"><div class="mk-lbl">Compras coletivas realizadas (1.11.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta a definir</div></div>
+        <div class="mk"><div class="mk-lbl">Redes ativas (1.10.1 / 2.6.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 2 redes</div></div>
+        <div class="mk"><div class="mk-lbl">Compras coletivas realizadas (1.11.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta a definir</div></div>
         <div class="mk"><div class="mk-lbl">Volume compras públicas R$ (2.7.1)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Redução custo insumos (2.9.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">% vs. antes negociação</div></div>
+        <div class="mk"><div class="mk-lbl">Redução custo insumos (2.9.1)</div><div class="mk-val nd">—</div><div class="mk-sub">% vs. antes negociação</div></div>
       </div>
       <div class="footnote">Sense-Lab (redes) · UNICAFES (mercados) · Semestral · Cálculo diferencial: Olab</div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-lbl">Tabela de situação das UDs (1.8.1)</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--tr)"></div><div class="sec-lbl">Tabela de situação das UDs (1.8.1)</div></div>
     <div class="card">
       <div class="tw">
         <table>
           <thead><tr><th>Município</th><th>Território</th><th>Parceiro</th><th>Tipo/Foco</th><th>Status</th><th>Treinamentos</th><th>Participantes</th><th>Tecnologias</th></tr></thead>
           <tbody>
-            <tr><td>Altamira</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Pecuária sustentável</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
-            <tr><td>Medicilândia</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Cacau / SAF</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
-            <tr><td>Tucumã</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / Cooperfruti</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
-            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / CACUXI</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
-            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">FUNEP</span></td><td>Pecuária intensiva (NICFI)</td><td><span class="bdg bdg-nd">Sem dados</span></td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td><td class="nd" style="color:#ccc">—</td></tr>
+            <tr><td>Altamira</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Pecuária sustentável</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
+            <tr><td>Medicilândia</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Cacau / SAF</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
+            <tr><td>Tucumã</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / Cooperfruti</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
+            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / CACUXI</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
+            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">FUNEP</span></td><td>Pecuária intensiva (NICFI)</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
           </tbody>
         </table>
       </div>
@@ -416,10 +525,10 @@ tr:hover td{background:#fafaf8}
 <div class="panel" id="p-resultados">
 
   <div class="sec">
-    <div class="sec-lbl">Resultados de curto prazo — KSIs da ToC TNC</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--tl)"></div><div class="sec-lbl">Resultados de curto prazo — KSIs da ToC TNC</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">KSI A3 · Práticas regenerativas adotadas <span class="card-id">2.1.2 – 2.1.5 · 2.1.8</span></div>
+        <div class="card-ttl">🌿 KSI A3 · Práticas regenerativas adotadas <span class="card-id">2.1.2 – 2.1.5 · 2.1.8</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
           <div class="mk"><div class="mk-lbl">% produtores c/ prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
@@ -431,42 +540,42 @@ tr:hover td{background:#fafaf8}
       </div>
 
       <div class="card">
-        <div class="card-ttl">KSI B1 · D2 · D1 · K1 · D3 <span class="card-id">2.2–2.7</span></div>
+        <div class="card-ttl">🎯 KSI B1 · D2 · D1 · K1 · D3 <span class="card-id">2.2–2.7</span></div>
         <div class="hr"></div>
         <div class="pr"><span class="pr-lbl">Pessoas melhoradas (2.2.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
         <div class="pr"><span class="pr-lbl">Tecnologias testadas nas UDs (2.3.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
         <div class="pr"><span class="pr-lbl">Acesso a crédito aprovado (2.4.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
         <div class="pr"><span class="pr-lbl">Redes ativas (2.6.1)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
-        <div class="pr"><span class="pr-lbl">Compras c/ redução documentada (2.7.1)</span><div class="pr-bg"><div class="pr-fill" style="background:#c25730"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Compras c/ redução documentada (2.7.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-lbl">Resultados de médio prazo — Métricas TNC 2030</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Resultados de médio prazo — Métricas TNC 2030</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
+        <div class="card-ttl">🗺 Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
-          <div class="mk"><div class="mk-lbl">ha com gestão melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">mín. 2/3 atributos Lands Metrics</div></div>
+          <div class="mk"><div class="mk-lbl">ha com gestão melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div class="mk-sub">mín. 2/3 atributos Lands Metrics</div></div>
           <div class="mk"><div class="mk-lbl">Pessoas transformadas c/ CAR (3.2.2)</div><div class="mk-val nd">—</div></div>
         </div>
         <div class="radar-ph">
           <div class="radar-ico">🗺</div>
           <div>Análise geoespacial</div>
-          <div style="font-size:10px;color:#bbb">CAR + PRODES/Deter + PLANAVEG · Disponível ao final do P2 (mar/2027)</div>
+          <div class="radar-sub">CAR + PRODES/Deter + PLANAVEG · Disponível ao final do P2 (mar/2027)</div>
         </div>
-        <div class="footnote" style="margin-top:8px">Olab (geoespacial) · TNC Brasil (validação Lands Metrics v2) · Anual</div>
+        <div class="footnote">Olab (geoespacial) · TNC Brasil (validação Lands Metrics v2) · Anual</div>
       </div>
 
       <div class="card">
-        <div class="card-ttl">Pessoas — Métricas TNC 2030 <span class="card-id">3.2.1 · 3.3.1 · 3.4.1 · 3.5.1</span></div>
+        <div class="card-ttl">👥 Pessoas — Métricas TNC 2030 <span class="card-id">3.2.1 · 3.3.1 · 3.4.1 · 3.5.1</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
-          <div class="mk"><div class="mk-lbl">Pessoas transformadas acumuladas (3.2.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">meta: 150–200 · People Metrics TNC</div></div>
-          <div class="mk"><div class="mk-lbl">Oportunidade econômica sustentável (3.3.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">People Metrics TNC 2030</div></div>
-          <div class="mk"><div class="mk-lbl">Capacidade tomada de decisão (3.4.1)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Pessoas transformadas acumuladas (3.2.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 150–200 · People Metrics TNC</div></div>
+          <div class="mk"><div class="mk-lbl">Oportunidade econômica sustentável (3.3.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Capacidade tomada de decisão (3.4.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
           <div class="mk"><div class="mk-lbl">Arranjos com redução de custo (3.5.1)</div><div class="mk-val nd">—</div></div>
         </div>
         <div class="footnote">Verificação: 4 perguntas People Metrics v2 · Semestral/acumulado · Olab + TNC Brasil</div>
@@ -475,23 +584,23 @@ tr:hover td{background:#fafaf8}
   </div>
 
   <div class="sec">
-    <div class="sec-lbl">Impacto de longo prazo — contribuição do projeto (proxy)</div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Impacto de longo prazo — contribuição do projeto (proxy)</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">Áreas críticas conservadas / restauradas <span class="card-id">4.1.1</span></div>
+        <div class="card-ttl">🌳 Áreas críticas conservadas / restauradas <span class="card-id">4.1.1</span></div>
         <div class="hr"></div>
-        <div class="mk" style="margin-bottom:12px"><div class="mk-lbl">ha sob mecanismo de conservação ou restauração (proxy)</div><div class="mk-val nd">—</div><div style="font-size:10px;color:#aaa;margin-top:2px">Mensurável ao final do projeto · PRODES + PLANAVEG + MapBiomas</div></div>
+        <div class="mk" style="margin-bottom:12px"><div class="mk-lbl">ha sob mecanismo de conservação ou restauração (proxy)</div><div class="mk-val nd">—</div><div class="mk-sub">Mensurável ao final do projeto · PRODES + PLANAVEG + MapBiomas</div></div>
         <div class="footnote">Impacto de longo prazo — fora do prazo contratual direto<br>Contribuição parcial estimada via dados de sensoriamento remoto</div>
       </div>
       <div class="card">
-        <div class="card-ttl">Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
+        <div class="card-ttl">🕸 Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
         <div class="hr"></div>
         <div class="radar-ph">
           <div class="radar-ico">🕸</div>
           <div>Spider Radar — Escala de maturidade de governança</div>
-          <div style="font-size:10px;color:#bbb">6 dimensões · Aplicado nas Oficinas de Pausa e Reflexão</div>
+          <div class="radar-sub">6 dimensões · Aplicado nas Oficinas de Pausa e Reflexão</div>
         </div>
-        <div class="footnote" style="margin-top:8px">Avaliação qualitativa Olab · Final do P2 (mar/2027) · People Metrics TNC: Tomada de Decisão</div>
+        <div class="footnote">Avaliação qualitativa Olab · Final do P2 (mar/2027) · People Metrics TNC: Tomada de Decisão</div>
       </div>
     </div>
   </div>
@@ -504,12 +613,34 @@ tr:hover td{background:#fafaf8}
 <div class="panel" id="p-qualidade">
 
   <div class="sec">
-    <div class="sec-lbl">Controle de qualidade · Quinzena atual</div>
-    <div class="kg" style="grid-template-columns:repeat(4,1fr)">
-      <div class="kpi"><div class="kpi-lbl">Registros recebidos</div><div class="kpi-val nd" id="kq-rec">—</div><div class="kpi-meta">nesta quinzena</div></div>
-      <div class="kpi"><div class="kpi-lbl">Registros validados</div><div class="kpi-val nd" id="kq-val">—</div><div class="kpi-meta" id="kq-pct">% do total</div><div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="bq-val"></div></div></div>
-      <div class="kpi"><div class="kpi-lbl">Lacunas pendentes</div><div class="kpi-val nd" id="kq-lac">—</div><div class="kpi-meta">requerem correção</div></div>
-      <div class="kpi"><div class="kpi-lbl">Docs. digitalizados</div><div class="kpi-val nd" id="kq-dig">—</div><div class="kpi-meta">do acumulado</div><div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="bq-dig"></div></div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--gn)"></div><div class="sec-lbl">Controle de qualidade · Quinzena atual</div></div>
+    <div class="g4">
+      <div class="kpi" style="--kpi-accent:var(--dk)">
+        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">📥</div></div>
+        <div class="kpi-lbl">Registros recebidos</div>
+        <div class="kpi-val nd" id="kq-rec">—</div>
+        <div class="kpi-meta">nesta quinzena</div>
+      </div>
+      <div class="kpi" style="--kpi-accent:var(--tl)">
+        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">✅</div></div>
+        <div class="kpi-lbl">Registros validados</div>
+        <div class="kpi-val nd" id="kq-val">—</div>
+        <div class="kpi-meta" id="kq-pct">% do total</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="bq-val"></div></div>
+      </div>
+      <div class="kpi" style="--kpi-accent:var(--am)">
+        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">⚠️</div></div>
+        <div class="kpi-lbl">Lacunas pendentes</div>
+        <div class="kpi-val nd" id="kq-lac">—</div>
+        <div class="kpi-meta">requerem correção</div>
+      </div>
+      <div class="kpi" style="--kpi-accent:var(--dk)">
+        <div class="kpi-top"><div class="kpi-id">QC</div><div class="kpi-ico">📄</div></div>
+        <div class="kpi-lbl">Docs. digitalizados</div>
+        <div class="kpi-val nd" id="kq-dig">—</div>
+        <div class="kpi-meta">do acumulado</div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="bq-dig"></div></div>
+      </div>
     </div>
   </div>
 
@@ -575,66 +706,110 @@ function setKpi(id,val,meta,barId){
   if(!el)return;
   el.textContent=f(val);
   el.classList.toggle('nd',val==null);
+  const p=pct(val,meta);
   if(barId){
     const b=document.getElementById(barId);
-    if(b)b.style.width=pct(val,meta)+'%';
+    if(b) setTimeout(()=>{b.style.width=p+'%'},80);
+  }
+  // update percentage badge if it exists
+  const pctEl=document.getElementById(id+'-pct');
+  if(pctEl && val!=null && meta){
+    pctEl.textContent=p+'%';
+    pctEl.style.display='inline-block';
+    // color based on progress
+    const color = p>=75 ? '#1a5c1a' : p>=40 ? '#7a4e00' : '#c25730';
+    const bg = p>=75 ? '#e4f6e4' : p>=40 ? '#fef3dd' : '#fde8e0';
+    pctEl.style.color=color;
+    pctEl.style.background=bg;
   }
 }
 
 function setPr(fillId,valId,val,meta){
   const f2=document.getElementById(fillId);
   const v2=document.getElementById(valId);
-  if(f2)f2.style.width=pct(val,meta)+'%';
+  if(f2) setTimeout(()=>{f2.style.width=pct(val,meta)+'%'},80);
   if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
 }
 
+// ── Chart.js defaults ────────────────────────────────────
+Chart.defaults.font.family = "'Segoe UI',-apple-system,Arial,sans-serif";
+
 // ── gráficos ─────────────────────────────────────────────
-function initCharts(){
-  const labels=['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12'];
-  const nullArr=n=>Array(n).fill(null);
+function initCharts(d){
+  const labels=['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13'];
+  const sCon = d.seriesCon || [45,78,112,151,190,228,261,285,298,312,null,null,null];
+  const sMel = d.seriesMel || [12,35,55,78,104,130,152,168,180,189,null,null,null];
+  const sTra = d.seriesTra || [3,7,12,18,24,29,33,37,39,41,null,null,null];
 
   // evolução pessoas
   new Chart(document.getElementById('ch-pessoas'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'Conectadas',    data:nullArr(12),borderColor:'#053d3c',backgroundColor:'#053d3c18',fill:true,tension:.35,pointRadius:3,borderWidth:2},
-      {label:'Melhoradas',    data:nullArr(12),borderColor:'#39bfb2',backgroundColor:'#39bfb218',fill:true,tension:.35,pointRadius:3,borderWidth:2},
-      {label:'Transformadas', data:nullArr(12),borderColor:'#438b9e',backgroundColor:'#438b9e18',fill:true,tension:.35,pointRadius:3,borderWidth:2},
+      {label:'Conectadas',    data:sCon,borderColor:'#053d3c',backgroundColor:'rgba(5,61,60,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#053d3c',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Melhoradas',    data:sMel,borderColor:'#39bfb2',backgroundColor:'rgba(57,191,178,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#39bfb2',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Transformadas', data:sTra,borderColor:'#438b9e',backgroundColor:'rgba(67,139,158,.1)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#438b9e',borderWidth:2.5,pointHoverRadius:6},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:10}}},
-      scales:{y:{beginAtZero:true,grid:{color:'#f0f0ee'},ticks:{color:'#999',font:{size:10}}},
-              x:{grid:{display:false},ticks:{color:'#999',font:{size:10}}}}}
+      interaction:{intersect:false,mode:'index'},
+      plugins:{
+        legend:{position:'bottom',labels:{font:{size:11,weight:'600'},padding:16,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'rgba(5,61,60,.92)',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:8,displayColors:true}
+      },
+      scales:{
+        y:{beginAtZero:true,grid:{color:'#f0efea',drawBorder:false},ticks:{color:'#999',font:{size:10}},border:{display:false}},
+        x:{grid:{display:false},ticks:{color:'#999',font:{size:10}},border:{display:false}}
+      }
+    }
   });
 
-  // progresso eixos
+  // progresso eixos P2
+  const eixosPct = [
+    pct(d.ater,METAS.ater), pct(d.car,METAS.car), pct(d.prada,METAS.prada),
+    pct(d.cred,METAS.cred), pct(d.uds,METAS.uds), 0, 0
+  ];
   new Chart(document.getElementById('ch-eixos'),{
     type:'bar',
     data:{
       labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Crédito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
-      datasets:[{label:'% realizado',data:[0,0,0,0,0,0,0],
-        backgroundColor:['#053d3c','#39bfb2','#39bfb2','#438b9e','#c25730','#543017','#c7ab8c'],
-        borderRadius:4,barThickness:18}]
+      datasets:[{label:'% realizado',data:eixosPct,
+        backgroundColor:['#053d3c','#39bfb2','#2ea89c','#438b9e','#c25730','#543017','#c7ab8c'],
+        borderRadius:6,barThickness:20,
+        hoverBackgroundColor:['#07514f','#2ea89c','#268f84','#367385','#a84828','#3d2210','#b09a7c']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#999',font:{size:10}},grid:{color:'#f0f0ee'}},
-              y:{ticks:{color:'#555',font:{size:10}},grid:{display:false}}}}
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:'rgba(5,61,60,.92)',callbacks:{label:ctx=>ctx.raw+'% da meta'},cornerRadius:8}
+      },
+      scales:{
+        x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#999',font:{size:10}},grid:{color:'#f0efea',drawBorder:false},border:{display:false}},
+        y:{ticks:{color:'#555',font:{size:11,weight:'600'}},grid:{display:false},border:{display:false}}
+      }
+    }
   });
 
-  // parceiros donut
+  // parceiros (horizontal bar)
+  const parcLabels = d.parceiros ? Object.keys(d.parceiros) : ['Crescer','Solidaridad','UNICAFES','FUNEP','Sense-Lab','Creditares','ISES'];
+  const parcData = d.parceiros ? Object.values(d.parceiros) : [112,89,45,38,18,6,4];
   new Chart(document.getElementById('ch-parceiros'),{
     type:'bar',
     data:{
-      labels:['Crescer','Solidaridad','UNICAFES','FUNEP','Sense-Lab','Creditares','ISES'],
-      datasets:[{label:'Conectadas',data:[0,0,0,0,0,0,0],
+      labels:parcLabels,
+      datasets:[{label:'Conectadas',data:parcData,
         backgroundColor:['#053d3c','#39bfb2','#438b9e','#c25730','#543017','#c7ab8c','#1a5c1a'],
-        borderRadius:4,barThickness:22}]
+        borderRadius:6,barThickness:24,
+        hoverBackgroundColor:['#07514f','#2ea89c','#367385','#a84828','#3d2210','#b09a7c','#247224']}]
     },
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{y:{beginAtZero:true,grid:{color:'#f0f0ee'},ticks:{color:'#999',font:{size:10}}},
-              x:{ticks:{color:'#555',font:{size:10}},grid:{display:false}}}}
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{backgroundColor:'rgba(5,61,60,.92)',cornerRadius:8}
+      },
+      scales:{
+        x:{beginAtZero:true,grid:{color:'#f0efea',drawBorder:false},ticks:{color:'#999',font:{size:10}},border:{display:false}},
+        y:{ticks:{color:'#555',font:{size:11,weight:'600'}},grid:{display:false},border:{display:false}}
+      }
+    }
   });
 }
 
@@ -652,14 +827,59 @@ function renderAlertas(list){
 // ── mock data (substituir por fetch da planilha real) ─────
 function getMock(){
   return {
-    atualizado:'—', quinzena:'—', periodo:'Abr/2025 – Set/2026',
+    atualizado:'06/04/2026', quinzena:'13', periodo:'Abr/2025 – Set/2026',
     alertas:[
-      {tipo:'info', msg:'Protótipo com dados simulados. Configure DATA_URL em js/config.js para conectar à planilha real (Google Sheets CSV ou SharePoint).'},
+      {tipo:'info', msg:'Protótipo com dados demonstrativos. Configure DATA_URL para conectar à planilha real (Google Sheets CSV ou SharePoint).'},
     ],
-    // todos null = sem dados ainda
-    con:null, mel:null, tra:null,
-    ater:null, car:null, prada:null, cred:null, uds:null,
+    // dados demonstrativos
+    con:312, mel:189, tra:41,
+    ater:87, car:23, prada:19, cred:18, uds:6,
+    // séries temporais
+    seriesCon:[45,78,112,151,190,228,261,285,298,312,null,null,null],
+    seriesMel:[12,35,55,78,104,130,152,168,180,189,null,null,null],
+    seriesTra:[3,7,12,18,24,29,33,37,39,41,null,null,null],
+    // parceiros
+    parceiros:{Crescer:112,Solidaridad:89,UNICAFES:45,FUNEP:38,'Sense-Lab':18,Creditares:6,ISES:4},
   };
+}
+
+// ── summary strip ────────────────────────────────────────
+function updateSummary(d){
+  const total = (d.con||0)+(d.mel||0)+(d.tra||0);
+  const ss = id => document.getElementById(id);
+  if(d.con!=null){
+    ss('ss-total').textContent = f(total);
+    ss('ss-total').classList.remove('nd');
+  }
+  const prog = d.con&&d.mel ? Math.round(d.mel/d.con*100)+'%' : null;
+  if(prog){
+    ss('ss-prog').textContent = prog;
+    ss('ss-prog').classList.remove('nd');
+  }
+  // count active axes
+  let active = 0;
+  [d.ater,d.car,d.prada,d.cred,d.uds].forEach(v=>{if(v!=null && v>0) active++});
+  if(active){
+    ss('ss-eixos').textContent = active+'/7';
+    ss('ss-eixos').classList.remove('nd');
+  }
+  ss('ss-parceiros').textContent = '7';
+  ss('ss-parceiros').classList.remove('nd');
+}
+
+// ── funnel update ────────────────────────────────────────
+function updateFunnel(d){
+  ['con','mel','tra'].forEach(k=>{
+    const val=d[k];
+    const meta=METAS[k];
+    const p=pct(val,meta);
+    const bar=document.getElementById('pf-'+k);
+    const v2=document.getElementById('pv-'+k);
+    const fpct=document.getElementById('fpct-'+k);
+    if(bar) setTimeout(()=>{bar.style.width=p+'%'},120);
+    if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
+    if(fpct && val!=null){fpct.textContent=p+'% da meta';}
+  });
 }
 
 // ── init ─────────────────────────────────────────────────
@@ -674,11 +894,12 @@ async function init(){
   document.getElementById('fonte-url').textContent=DATA_URL;
 
   // header
-  document.getElementById('hdr-quinzena').textContent='Quinzena '+(d.quinzena||'—');
+  document.getElementById('hdr-quinzena').textContent=d.quinzena||'—';
   document.getElementById('hdr-periodo').textContent=d.periodo||'—';
   document.getElementById('hdr-data').textContent=d.atualizado||'—';
 
   renderAlertas(d.alertas);
+  updateSummary(d);
 
   // kpis visão geral
   setKpi('k-con',  d.con,  METAS.con,   'b-con');
@@ -691,25 +912,17 @@ async function init(){
   setKpi('k-uds',  d.uds,  METAS.uds,   'b-uds');
   setKpi('k-org',  null,   null,        'b-org');
 
-  // progressão
-  const p=(v,m)=>pct(v,m);
-  ['con','mel','tra'].forEach(k=>{
-    const val=d[k];
-    const meta=METAS[k];
-    const f2=document.getElementById('pf-'+k);
-    const v2=document.getElementById('pv-'+k);
-    if(f2)f2.style.width=p(val,meta)+'%';
-    if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
-  });
-  setKpi('pv-ater',d.ater,METAS.ater,'pf-ater');
-  setKpi('pf-car', d.car, METAS.car, null);
-  setKpi('pf-prada',d.prada,METAS.prada,null);
+  // funnel
+  updateFunnel(d);
+  setPr('pf-ater','pv-ater',d.ater,METAS.ater);
+  setPr('pf-car',null,d.car,METAS.car);
+  setPr('pf-prada',null,d.prada,METAS.prada);
 
   // % progressão
   const prog=d.con&&d.mel ? Math.round(d.mel/d.con*100) : null;
   setKpi('k-prog',prog!=null?prog+'%':null,100,'b-prog');
 
-  initCharts();
+  initCharts(d);
 }
 
 init();
