@@ -59,14 +59,14 @@ body{
   padding: 0;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--primary-dark);
+  border-bottom: 2px solid var(--primary-dark);
 }
 .top-bar{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 32px;
-  padding: 24px 40px;
+  gap: 24px;
+  padding: 14px 40px;
 }
 .top-left{
   display: flex;
@@ -80,26 +80,26 @@ body{
 .top-wordmark{
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 .top-brand{
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.7);
+  color: rgba(255,255,255,.65);
 }
 .top h1{
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   letter-spacing: -0.01em;
   color: #ffffff;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 .top .sub{
-  font-size: 13px;
-  color: rgba(255,255,255,.65);
-  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(255,255,255,.60);
+  margin-top: 2px;
   font-weight: 400;
 }
 .top-meta{
@@ -109,20 +109,20 @@ body{
 }
 .top-stat{
   text-align: center;
-  padding: 12px 20px;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.15);
+  padding: 8px 16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
 }
 .top-stat .ts-lbl{
-  font-size: 10px;
-  color: rgba(255,255,255,.6);
+  font-size: 9px;
+  color: rgba(255,255,255,.55);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 .top-stat .ts-val{
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: #ffffff;
 }
@@ -132,32 +132,13 @@ body{
 
 /* ── data source bar ────────────────────────────────────── */
 .fonte-bar{
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 40px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.fonte-bar b{
-  font-weight: 500;
-  color: var(--text-primary);
-}
-.fonte-bar .url-pill{
-  background: var(--gray-light);
-  border: 1px solid var(--border);
-  padding: 2px 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 11px;
-  color: var(--text-secondary);
+  display: none;
 }
 
 /* ── navigation tabs ────────────────────────────────────── */
 .tabs{
   background: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid #e8e6e4;
   display: flex;
   gap: 0;
   padding: 0 40px;
@@ -207,7 +188,7 @@ body{
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #e8e6e4;
 }
 .sec-accent{
   display: none;
@@ -255,7 +236,7 @@ body{
 }
 .kpi{
   background: var(--bg-primary);
-  border: 1px solid var(--border);
+  border: 1px solid #e8e6e4;
   padding: 20px;
   position: relative;
   overflow: hidden;
@@ -352,7 +333,7 @@ body{
 /* ── card ─────────────────────────────────────────────── */
 .card{
   background: var(--bg-primary);
-  border: 1px solid var(--border);
+  border: 1px solid #e8e6e4;
   padding: 24px;
 }
 .card-ttl{
@@ -377,7 +358,7 @@ body{
 }
 .hr{
   height: 1px;
-  background: var(--border);
+  background: #e8e6e4;
   margin: 14px 0 16px;
 }
 
@@ -856,13 +837,6 @@ tr:hover td{
     <span class="rb-sep" style="margin-left:auto">·</span>
     <span>Territórios: Transamazônica · Sudeste do Pará</span>
   </div>
-</div>
-
-<!-- ── FONTE ─────────────────────────────────────────────── -->
-<div class="fonte-bar">
-  <b>Fonte de dados:</b>
-  <span class="url-pill" id="fonte-url">data/mock.json</span>
-  <span>— configure <code>DATA_URL</code> em <code>js/config.js</code> para apontar para sua planilha (Google Sheets CSV ou SharePoint)</span>
 </div>
 
 <!-- ── TABS ─────────────────────────────────────────────── -->
