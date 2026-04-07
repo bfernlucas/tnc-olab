@@ -12,26 +12,26 @@
 /* ── reset & tokens ──────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Institutional color palette - inspired by World Bank / UNDP */
-  --primary:    #0052CC;  /* Deep institutional blue */
-  --primary-dark: #003d99;
-  --accent:     #107C10;  /* TNC green - subtle accent */
-  --accent-dark: #004f20;
+  /* Institutional color palette - TNC Green Focus */
+  --primary:    #107C10;  /* TNC Green - primary */
+  --primary-dark: #004f20;
+  --accent:     #0052CC;  /* Institutional blue - support */
+  --accent-dark: #003d99;
   --accent-light: #f0f7f1;
 
   --secondary:  #605e5c;  /* Warm gray for supporting info */
   --secondary-light: #ece8e4;
 
-  --alert-warn: #d83b01;  /* Alert colors - clear but not bright */
-  --alert-success: #004f20;
+  --alert-warn: #d83b01;
+  --alert-success: #107C10;
 
   --bg-primary:  #ffffff;
-  --bg-secondary: #f9f8f6;  /* Very subtle warm gray */
-  --border:      #d2d0ce;   /* Institutional border gray */
+  --bg-secondary: #f9f8f6;
+  --border:      #d2d0ce;
 
-  --text-primary:   #323130;  /* Near black for readability */
-  --text-secondary: #605e5c;  /* Supporting text */
-  --text-tertiary:  #8a8886;  /* De-emphasized text */
+  --text-primary:   #323130;
+  --text-secondary: #605e5c;
+  --text-tertiary:  #8a8886;
 
   --gray-light:  #f9f8f6;
   --gray-medium: #d2d0ce;
@@ -57,7 +57,7 @@ body{
   padding: 0;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid #003d99;
+  border-bottom: 1px solid var(--primary-dark);
 }
 .top-bar{
   display: flex;
@@ -73,15 +73,7 @@ body{
   flex: 1;
 }
 .top-logo{
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: rgba(255,255,255,.15);
-  padding: 6px;
-  border: 1px solid rgba(255,255,255,.2);
+  display: none;
 }
 .top-wordmark{
   display: flex;
@@ -133,25 +125,7 @@ body{
   color: #ffffff;
 }
 .top-ribbon{
-  background: rgba(0,0,0,.1);
-  border-top: 1px solid rgba(255,255,255,.1);
-  padding: 10px 40px;
-  font-size: 12px;
-  color: rgba(255,255,255,.65);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-.top-ribbon span{
-  white-space: nowrap;
-}
-.top-ribbon .rb-sep{
-  opacity: 0.4;
-}
-.top-ribbon .rb-highlight{
-  color: rgba(255,255,255,.95);
-  font-weight: 500;
+  display: none;
 }
 
 /* ── data source bar ────────────────────────────────────── */
@@ -729,6 +703,11 @@ tr:hover td{
   font-weight: 500;
 }
 
+/* ── charts & visualizations ───────────────────────── */
+.card canvas{
+  max-height: 280px;
+}
+
 /* ── animations ───────────────────────────────────────── */
 @keyframes fadeIn{
   from { opacity: 0; }
@@ -852,6 +831,7 @@ tr:hover td{
   <button class="tab"     onclick="tab('p2',this)">Desenv. Territorial · P2</button>
   <button class="tab"     onclick="tab('resultados',this)">Resultados CP / MP</button>
   <button class="tab"     onclick="tab('qualidade',this)">Qualidade dos Dados</button>
+  <button class="tab"     onclick="tab('cadastro',this)">Pessoas & Organizações</button>
 </div>
 
 <div class="main">
@@ -1320,6 +1300,86 @@ tr:hover td{
   </div>
 
 </div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  PESSOAS & ORGANIZAÇÕES                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="panel" id="p-cadastro">
+
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Territórios de Atuação</div></div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-ttl">Transamazônica — 7 municípios</div>
+        <div class="hr"></div>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+          <strong>Municípios:</strong> Altamira, Brasil Novo, Medicilândia, Uruará, Placas, Novo Repartimento e Pacajá.
+        </p>
+        <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
+          Principal foco de atividades de ATER e Unidades Demonstrativas. Concentra a maioria do trabalho de capacitação e transferência de tecnologia agrícola.
+        </p>
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
+          Mapa Interativo — Transamazônica
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-ttl">Sudeste do Pará — 4 municípios</div>
+        <div class="hr"></div>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+          <strong>Municípios:</strong> Tucumã, São Félix do Xingu, Ourilândia do Norte e Água Azul do Norte.
+        </p>
+        <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
+          Presença forte via Crescer (Cooperfruti em Tucumã, CACUXI em São Félix) e FUNEP (UDs de pecuária sustentável).
+        </p>
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
+          Mapa Interativo — Sudeste do Pará
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Cadastro de Pessoas</div></div>
+    <div class="card">
+      <div class="card-ttl">Registro de Indivíduos Beneficiários</div>
+      <div class="hr"></div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Nome</th><th>Município</th><th>Território</th><th>Sexo</th><th>Etapa</th><th>Data Registro</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-tertiary);">Cadastro integrado via formulário — <em>Dados carregados da planilha vinculada</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footnote">Coleta: Listas de presença dos parceiros + formulários quinzenais · Consolidação: Base Olab</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Organizações Sociais Parceiras</div></div>
+    <div class="card">
+      <div class="card-ttl">Registro Institucional — Cooperativas e Associações</div>
+      <div class="hr"></div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr><th>Organização</th><th>Tipo</th><th>Município</th><th>Representante</th><th>Membros</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--text-tertiary);">Mapeamento de organizações sociais — <em>Dados do levantamento de maturidade institucional</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="footnote">Verificação: levantamento semestral de maturidade institucional · Responsável: Olab + Sense-Lab</div>
+    </div>
+  </div>
+
+</div>
+
+</div>
 </div><!-- /.main -->
 
 <script>
@@ -1379,28 +1439,28 @@ function initCharts(d){
   const sMel = d.seriesMel || [12,35,55,78,104,130,152,168,180,189,null,null,null];
   const sTra = d.seriesTra || [3,7,12,18,24,29,33,37,39,41,null,null,null];
 
-  // evolução pessoas — TNC brand colors
+  // evolução pessoas — Institutional style
   new Chart(document.getElementById('ch-pessoas'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'Conectadas',    data:sCon,borderColor:'#007931',backgroundColor:'rgba(0,121,49,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#007931',borderWidth:2.5,pointHoverRadius:6},
-      {label:'Melhoradas',    data:sMel,borderColor:'#4aa241',backgroundColor:'rgba(74,162,65,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#4aa241',borderWidth:2.5,pointHoverRadius:6},
-      {label:'Transformadas', data:sTra,borderColor:'#0c834c',backgroundColor:'rgba(12,131,76,.08)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#0c834c',borderWidth:2.5,pointHoverRadius:6},
+      {label:'Conectadas',    data:sCon,borderColor:'#107C10',backgroundColor:'rgba(16,124,16,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#107C10',borderWidth:2,pointHoverRadius:6},
+      {label:'Melhoradas',    data:sMel,borderColor:'#0052CC',backgroundColor:'rgba(0,82,204,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#0052CC',borderWidth:2,pointHoverRadius:6},
+      {label:'Transformadas', data:sTra,borderColor:'#004f20',backgroundColor:'rgba(0,79,32,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#004f20',borderWidth:2,pointHoverRadius:6},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{intersect:false,mode:'index'},
       plugins:{
-        legend:{position:'bottom',labels:{font:{size:11,weight:'600'},padding:16,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'rgba(5,61,60,.92)',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:8,displayColors:true}
+        legend:{position:'bottom',labels:{font:{size:12,weight:'500'},padding:14,usePointStyle:true,pointStyle:'circle',color:'#323130'}},
+        tooltip:{backgroundColor:'rgba(50,49,48,.95)',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:0,displayColors:true}
       },
       scales:{
-        y:{beginAtZero:true,grid:{color:'#f0efea',drawBorder:false},ticks:{color:'#999',font:{size:10}},border:{display:false}},
-        x:{grid:{display:false},ticks:{color:'#999',font:{size:10}},border:{display:false}}
+        y:{beginAtZero:true,grid:{color:'#e8e6e4',drawBorder:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}},
+        x:{grid:{display:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}}
       }
     }
   });
 
-  // progresso eixos P2 — TNC brand colors
+  // progresso eixos P2 — Institutional style
   const eixosPct = [
     pct(d.ater,METAS.ater), pct(d.car,METAS.car), pct(d.prada,METAS.prada),
     pct(d.cred,METAS.cred), pct(d.uds,METAS.uds), 0, 0
@@ -1410,23 +1470,23 @@ function initCharts(d){
     data:{
       labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Crédito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
       datasets:[{label:'% realizado',data:eixosPct,
-        backgroundColor:['#007931','#4aa241','#4aa241','#2b7bb9','#7d6447','#0c834c','#3d8c20'],
-        borderRadius:6,barThickness:20,
-        hoverBackgroundColor:['#005a23','#3d912f','#3d912f','#1e5f8a','#5e4a30','#08603a','#2e6a18']}]
+        backgroundColor:['#107C10','#0052CC','#004f20','#107C10','#004f20','#0052CC','#107C10'],
+        borderRadius:0,barThickness:18,
+        hoverBackgroundColor:['#005a23','#003d99','#002a12','#005a23','#002a12','#003d99','#005a23']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        tooltip:{backgroundColor:'rgba(5,61,60,.92)',callbacks:{label:ctx=>ctx.raw+'% da meta'},cornerRadius:8}
+        tooltip:{backgroundColor:'rgba(50,49,48,.95)',callbacks:{label:ctx=>ctx.raw+'% da meta'},cornerRadius:0}
       },
       scales:{
-        x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#999',font:{size:10}},grid:{color:'#f0efea',drawBorder:false},border:{display:false}},
-        y:{ticks:{color:'#555',font:{size:11,weight:'600'}},grid:{display:false},border:{display:false}}
+        x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#605e5c',font:{size:11}},grid:{color:'#e8e6e4',drawBorder:false},border:{display:false}},
+        y:{ticks:{color:'#323130',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
       }
     }
   });
 
-  // parceiros (horizontal bar)
+  // parceiros (horizontal bar) — Institutional style
   const parcLabels = d.parceiros ? Object.keys(d.parceiros) : ['Crescer','Solidaridad','UNICAFES','FUNEP','Sense-Lab','Creditares','ISES'];
   const parcData = d.parceiros ? Object.values(d.parceiros) : [112,89,45,38,18,6,4];
   new Chart(document.getElementById('ch-parceiros'),{
@@ -1434,18 +1494,18 @@ function initCharts(d){
     data:{
       labels:parcLabels,
       datasets:[{label:'Conectadas',data:parcData,
-        backgroundColor:['#007931','#4aa241','#0c834c','#2b7bb9','#7d6447','#3d8c20','#004f20'],
-        borderRadius:6,barThickness:24,
-        hoverBackgroundColor:['#005a23','#3d912f','#08603a','#1e5f8a','#5e4a30','#2e6a18','#003316']}]
+        backgroundColor:['#107C10','#0052CC','#004f20','#107C10','#0052CC','#004f20','#107C10'],
+        borderRadius:0,barThickness:22,
+        hoverBackgroundColor:['#005a23','#003d99','#002a12','#005a23','#003d99','#002a12','#005a23']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        tooltip:{backgroundColor:'rgba(5,61,60,.92)',cornerRadius:8}
+        tooltip:{backgroundColor:'rgba(50,49,48,.95)',cornerRadius:0}
       },
       scales:{
-        x:{beginAtZero:true,grid:{color:'#f0efea',drawBorder:false},ticks:{color:'#999',font:{size:10}},border:{display:false}},
-        y:{ticks:{color:'#555',font:{size:11,weight:'600'}},grid:{display:false},border:{display:false}}
+        x:{beginAtZero:true,grid:{color:'#e8e6e4',drawBorder:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}},
+        y:{ticks:{color:'#323130',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
       }
     }
   });
