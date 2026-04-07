@@ -7,7 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* ── reset & tokens ──────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -708,6 +710,45 @@ tr:hover td{
   max-height: 280px;
 }
 
+/* ── maps ──────────────────────────────────────────── */
+.map-container{
+  height: 300px;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  background: #f9f8f6;
+}
+
+.leaflet-container{
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.leaflet-popup-content-wrapper{
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.leaflet-popup-content{
+  color: var(--text-primary);
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.leaflet-control-attribution{
+  font-size: 10px;
+  background: rgba(255,255,255,.8);
+  border: 1px solid var(--border);
+}
+
+.marker-green{
+  filter: hue-rotate(0deg) saturate(1.2) brightness(0.95);
+}
+
+.marker-blue{
+  filter: hue-rotate(220deg) saturate(1.1) brightness(0.95);
+}
+
 /* ── animations ───────────────────────────────────────── */
 @keyframes fadeIn{
   from { opacity: 0; }
@@ -1318,9 +1359,7 @@ tr:hover td{
         <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
           Principal foco de atividades de ATER e Unidades Demonstrativas. Concentra a maioria do trabalho de capacitação e transferência de tecnologia agrícola.
         </p>
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
-          Mapa Interativo — Transamazônica
-        </div>
+        <div id="map-transamazonica" class="map-container"></div>
       </div>
 
       <div class="card">
@@ -1332,9 +1371,7 @@ tr:hover td{
         <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
           Presença forte via Crescer (Cooperfruti em Tucumã, CACUXI em São Félix) e FUNEP (UDs de pecuária sustentável).
         </p>
-        <div style="margin-top: 16px; padding: 12px; background: var(--bg-secondary); border: 1px solid var(--border); min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
-          Mapa Interativo — Sudeste do Pará
-        </div>
+        <div id="map-sudeste" class="map-container"></div>
       </div>
     </div>
   </div>
@@ -1393,6 +1430,11 @@ function tab(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   btn.classList.add('on');
   document.getElementById('p-'+id).classList.add('on');
+
+  // Initialize maps when cadastro tab is opened
+  if(id === 'cadastro'){
+    setTimeout(initMaps, 100);
+  }
 }
 
 // ── helpers ──────────────────────────────────────────────
@@ -1508,6 +1550,62 @@ function initCharts(d){
         y:{ticks:{color:'#323130',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
       }
     }
+  });
+}
+
+// ── mapas ─────────────────────────────────────────────────
+function initMaps(){
+  // Transamazônica
+  const mapTA = L.map('map-transamazonica').setView([-3.0, -52.2], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
+  }).addTo(mapTA);
+
+  const municipiosTa = [
+    {name: 'Altamira', lat: -2.908, lng: -52.209},
+    {name: 'Brasil Novo', lat: -3.802, lng: -52.254},
+    {name: 'Medicilândia', lat: -3.452, lng: -52.141},
+    {name: 'Uruará', lat: -2.755, lng: -51.757},
+    {name: 'Placas', lat: -3.097, lng: -52.614},
+    {name: 'Novo Repartimento', lat: -3.945, lng: -50.754},
+    {name: 'Pacajá', lat: -2.496, lng: -51.464}
+  ];
+
+  municipiosTa.forEach(m => {
+    L.circleMarker([m.lat, m.lng], {
+      radius: 7,
+      fillColor: '#107C10',
+      color: '#004f20',
+      weight: 2,
+      opacity: 0.9,
+      fillOpacity: 0.7
+    }).bindPopup(`<strong>${m.name}</strong><br/>Transamazônica`).addTo(mapTA);
+  });
+
+  // Sudeste do Pará
+  const mapSE = L.map('map-sudeste').setView([-6.8, -50.8], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
+  }).addTo(mapSE);
+
+  const municipiosSe = [
+    {name: 'Tucumã', lat: -6.768, lng: -49.984},
+    {name: 'São Félix do Xingu', lat: -6.643, lng: -51.996},
+    {name: 'Ourilândia do Norte', lat: -7.167, lng: -51.500},
+    {name: 'Água Azul do Norte', lat: -6.433, lng: -50.398}
+  ];
+
+  municipiosSe.forEach(m => {
+    L.circleMarker([m.lat, m.lng], {
+      radius: 7,
+      fillColor: '#0052CC',
+      color: '#003d99',
+      weight: 2,
+      opacity: 0.9,
+      fillOpacity: 0.7
+    }).bindPopup(`<strong>${m.name}</strong><br/>Sudeste do Pará`).addTo(mapSE);
   });
 }
 
