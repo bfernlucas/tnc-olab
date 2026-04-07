@@ -1361,7 +1361,16 @@ tr:hover td{
             <tr><th>ID</th><th>Nome</th><th>Município</th><th>Território</th><th>Sexo</th><th>Etapa</th><th>Data Registro</th></tr>
           </thead>
           <tbody>
-            <tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-tertiary);">Cadastro integrado via formulário — <em>Dados carregados da planilha vinculada</em></td></tr>
+            <tr><td>P001</td><td>Maria da Silva Santos</td><td>Altamira</td><td>Transamazônica</td><td>F</td><td>Conectada</td><td>15/01/2025</td></tr>
+            <tr><td>P002</td><td>João Costa Ferreira</td><td>Brasil Novo</td><td>Transamazônica</td><td>M</td><td>Melhorada</td><td>20/01/2025</td></tr>
+            <tr><td>P003</td><td>Ana Paula Oliveira</td><td>Medicilândia</td><td>Transamazônica</td><td>F</td><td>Transformada</td><td>25/01/2025</td></tr>
+            <tr><td>P004</td><td>Carlos Alberto Souza</td><td>Uruará</td><td>Transamazônica</td><td>M</td><td>Conectada</td><td>02/02/2025</td></tr>
+            <tr><td>P005</td><td>Francisca Mendes</td><td>Placas</td><td>Transamazônica</td><td>F</td><td>Melhorada</td><td>10/02/2025</td></tr>
+            <tr><td>P006</td><td>José Ribeiro Pereira</td><td>Novo Repartimento</td><td>Transamazônica</td><td>M</td><td>Conectada</td><td>18/02/2025</td></tr>
+            <tr><td>P007</td><td>Rosane da Cruz Silva</td><td>Pacajá</td><td>Transamazônica</td><td>F</td><td>Melhorada</td><td>28/02/2025</td></tr>
+            <tr><td>P008</td><td>Roberto Gomes Santos</td><td>Tucumã</td><td>Sudeste</td><td>M</td><td>Transformada</td><td>05/03/2025</td></tr>
+            <tr><td>P009</td><td>Antônio Lopes Dias</td><td>São Félix do Xingu</td><td>Sudeste</td><td>M</td><td>Conectada</td><td>12/03/2025</td></tr>
+            <tr><td>P010</td><td>Mariana Rodrigues Costa</td><td>Ourilândia do Norte</td><td>Sudeste</td><td>F</td><td>Melhorada</td><td>20/03/2025</td></tr>
           </tbody>
         </table>
       </div>
@@ -1380,7 +1389,14 @@ tr:hover td{
             <tr><th>Organização</th><th>Tipo</th><th>Município</th><th>Representante</th><th>Membros</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--text-tertiary);">Mapeamento de organizações sociais — <em>Dados do levantamento de maturidade institucional</em></td></tr>
+            <tr><td>Associação de Agricultores de Altamira</td><td>Associação</td><td>Altamira</td><td>José dos Santos</td><td>78</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Cooperativa Brasil Novo Solidária</td><td>Cooperativa</td><td>Brasil Novo</td><td>Maria Ferreira</td><td>45</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associação Medicilândia Sustentável</td><td>Associação</td><td>Medicilândia</td><td>Paulo Gomes</td><td>52</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Cooperfruti Tucumã</td><td>Cooperativa</td><td>Tucumã</td><td>Roberto Silva</td><td>168</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associação CACUXI São Félix</td><td>Associação</td><td>São Félix do Xingu</td><td>Antônio Lopes</td><td>89</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associação Produtores Ourilândia</td><td>Associação</td><td>Ourilândia do Norte</td><td>Francisca Cruz</td><td>34</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Rede Transamazônica de Agroecologia</td><td>Rede</td><td>Altamira</td><td>Dácio Ribeiro</td><td>245</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Rede Sudeste Solidária</td><td>Rede</td><td>Tucumã</td><td>Luiz Fernando</td><td>198</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -1597,19 +1613,41 @@ function renderAlertas(list){
 // ── mock data (substituir por fetch da planilha real) ─────
 function getMock(){
   return {
-    atualizado:'06/04/2026', quinzena:'13', periodo:'Abr/2025 – Set/2026',
+    atualizado:'07/04/2026', quinzena:'14', periodo:'Abr/2025 – Set/2026',
     alertas:[
-      {tipo:'info', msg:'Protótipo com dados demonstrativos. Configure DATA_URL para conectar à planilha real (Google Sheets CSV ou SharePoint).'},
+      {tipo:'info', msg:'Dashboard com dados demonstrativos dos territórios Transamazônica e Sudeste do Pará.'},
     ],
-    // dados demonstrativos
-    con:312, mel:189, tra:41,
-    ater:87, car:23, prada:19, cred:18, uds:6,
-    // séries temporais
-    seriesCon:[45,78,112,151,190,228,261,285,298,312,null,null,null],
-    seriesMel:[12,35,55,78,104,130,152,168,180,189,null,null,null],
-    seriesTra:[3,7,12,18,24,29,33,37,39,41,null,null,null],
-    // parceiros
-    parceiros:{Crescer:112,Solidaridad:89,UNICAFES:45,FUNEP:38,'Sense-Lab':18,Creditares:6,ISES:4},
+    // dados demonstrativos — Programa 1 (Pessoas)
+    con:542, mel:348, tra:89,
+    // dados demonstrativos — Programa 2 (Territorial)
+    ater:142, car:38, prada:31, cred:28, uds:9, org:14,
+    // séries temporais — quinzenas
+    seriesCon:[45,78,112,151,190,228,261,285,320,378,425,512,542],
+    seriesMel:[12,35,55,78,104,130,152,168,210,258,298,325,348],
+    seriesTra:[3,7,12,18,24,29,33,37,48,62,73,82,89],
+    // parceiros por contribuição
+    parceiros:{
+      Crescer: 186,
+      Solidaridad: 154,
+      FUNEP: 89,
+      UNICAFES: 67,
+      'Sense-Lab': 28,
+      'Creditares': 12,
+      ISES: 6
+    },
+    // dados por território
+    territorios: {
+      transamazonica: {
+        pessoas: 385,
+        organizacoes: 9,
+        municipios: ['Altamira', 'Brasil Novo', 'Medicilândia', 'Uruará', 'Placas', 'Novo Repartimento', 'Pacajá']
+      },
+      sudeste: {
+        pessoas: 157,
+        organizacoes: 5,
+        municipios: ['Tucumã', 'São Félix do Xingu', 'Ourilândia do Norte', 'Água Azul do Norte']
+      }
+    }
   };
 }
 
