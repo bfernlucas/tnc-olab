@@ -6,240 +6,419 @@
 <title>Dashboard MEL · TNC Agricultura Familiar no Pará</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-/* ── reset & tokens ──────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* Institutional color palette - TNC Green Focus */
-  --primary:    #107C10;  /* TNC Green - primary */
-  --primary-dark: #004f20;
-  --accent:     #0052CC;  /* Institutional blue - support */
-  --accent-dark: #003d99;
-  --accent-light: #f0f7f1;
+  --sidebar-w: 248px;
+  --topbar-h: 56px;
 
-  --secondary:  #605e5c;  /* Warm gray for supporting info */
-  --secondary-light: #ece8e4;
+  --navy-900: #0C1D36;
+  --navy-800: #122A4E;
+  --navy-700: #1B3A5C;
+  --navy-600: #244B72;
+  --navy-100: #DBEAFE;
+  --navy-50:  #EFF6FF;
 
-  --alert-warn: #d83b01;
-  --alert-success: #107C10;
+  --green-800: #166534;
+  --green-700: #15803D;
+  --green-600: #16A34A;
+  --green-100: #DCFCE7;
+  --green-50:  #F0FDF4;
 
-  --bg-primary:  #ffffff;
-  --bg-secondary: #f9f8f6;
-  --border:      #d2d0ce;
+  --teal-700: #0F766E;
+  --teal-600: #0D9488;
 
-  --text-primary:   #323130;
-  --text-secondary: #605e5c;
-  --text-tertiary:  #8a8886;
+  --gray-900: #111827;
+  --gray-800: #1F2937;
+  --gray-700: #374151;
+  --gray-600: #4B5563;
+  --gray-500: #6B7280;
+  --gray-400: #9CA3AF;
+  --gray-300: #D1D5DB;
+  --gray-200: #E5E7EB;
+  --gray-100: #F3F4F6;
+  --gray-50:  #F9FAFB;
+  --white:    #FFFFFF;
 
-  --gray-light:  #f9f8f6;
-  --gray-medium: #d2d0ce;
-  --gray-dark:   #605e5c;
+  --success: #15803D;
+  --success-bg: #F0FDF4;
+  --success-border: #BBF7D0;
+  --warning: #C2410C;
+  --warning-bg: #FFF7ED;
+  --warning-border: #FED7AA;
+  --info: #1D4ED8;
+  --info-bg: #EFF6FF;
+  --info-border: #BFDBFE;
 
-  font-family: 'Roboto', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+
+  --radius: 6px;
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 14px;
+  color: var(--gray-800);
 }
 body{
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  font-size: 14px;
-  line-height: 1.6;
-  font-weight: 400;
+  background: var(--gray-100);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  min-height: 100vh;
 }
 
-/* ── header ─────────────────────────────────────────── */
-.top{
-  background-color: var(--primary);
-  color: #ffffff;
-  padding: 0;
+/* ── SIDEBAR ─────────────────────────────────────────── */
+.sidebar{
+  width: var(--sidebar-w);
+  background: var(--navy-900);
+  color: var(--white);
   display: flex;
   flex-direction: column;
-  border-bottom: 2px solid var(--primary-dark);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
-.top-bar{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  padding: 14px 40px;
+.sidebar-brand{
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
-.top-left{
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex: 1;
-}
-.top-logo{
-  display: none;
-}
-.top-wordmark{
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.top-brand{
+.sidebar-org{
   font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.65);
+  color: rgba(255,255,255,.45);
+  margin-bottom: 4px;
 }
-.top h1{
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: #ffffff;
+.sidebar-title{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
   line-height: 1.3;
 }
-.top .sub{
+.sidebar-subtitle{
   font-size: 11px;
-  color: rgba(255,255,255,.60);
-  margin-top: 2px;
-  font-weight: 400;
+  color: rgba(255,255,255,.4);
+  margin-top: 4px;
+  line-height: 1.4;
 }
-.top-meta{
-  display: flex;
-  gap: 12px;
-  align-items: center;
+.sidebar-nav{
+  flex: 1;
+  padding: 12px 0;
 }
-.top-stat{
-  text-align: center;
-  padding: 8px 16px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.12);
+.nav-section{
+  padding: 0 16px;
+  margin-bottom: 4px;
 }
-.top-stat .ts-lbl{
-  font-size: 9px;
-  color: rgba(255,255,255,.55);
+.nav-section-label{
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 500;
-  margin-bottom: 2px;
+  color: rgba(255,255,255,.3);
+  padding: 12px 8px 6px;
 }
-.top-stat .ts-val{
-  font-size: 14px;
-  font-weight: 500;
-  color: #ffffff;
-}
-.top-ribbon{
-  display: none;
-}
-
-/* ── data source bar ────────────────────────────────────── */
-.fonte-bar{
-  display: none;
-}
-
-/* ── navigation tabs ────────────────────────────────────── */
-.tabs{
-  background: var(--bg-primary);
-  border-bottom: 2px solid #e8e6e4;
+.nav-item{
   display: flex;
-  gap: 0;
-  padding: 0 40px;
-  overflow-x: auto;
-}
-.tab{
-  padding: 14px 20px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  cursor: pointer;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,.6);
+  transition: background .15s, color .15s;
   border: none;
-  border-bottom: 3px solid transparent;
   background: none;
-  white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
-  margin-bottom: -1px;
-  letter-spacing: 0.01em;
+  width: 100%;
+  text-align: left;
+  position: relative;
 }
-.tab.on{
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  font-weight: 500;
+.nav-item:hover{
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.85);
 }
-.tab:hover:not(.on){
-  color: var(--text-primary);
+.nav-item.on{
+  background: rgba(255,255,255,.1);
+  color: var(--white);
+}
+.nav-item.on::before{
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--green-600);
+  border-radius: 0 2px 2px 0;
+}
+.nav-icon{
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  opacity: .7;
+}
+.nav-item.on .nav-icon{
+  opacity: 1;
+}
+.sidebar-footer{
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
 }
 
-/* ── main content ───────────────────────────────────────── */
-.main{
-  padding: 40px 48px;
-  max-width: 1280px;
-  margin: 0 auto;
+/* ── APP CONTENT ─────────────────────────────────────── */
+.app-content{
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
-.panel{
+
+/* ── TOP BAR ─────────────────────────────────────────── */
+.topbar{
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-h);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 24px;
+}
+.topbar-left{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topbar-page{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+.topbar-meta{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.topbar-tag{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--gray-500);
+}
+.topbar-tag strong{
+  font-weight: 600;
+  color: var(--gray-700);
+}
+.mobile-toggle{
   display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--gray-600);
 }
-.panel.on{
-  display: block;
+
+/* ── FILTER BAR ──────────────────────────────────────── */
+.filter-bar{
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.sec{
-  margin-bottom: 40px;
+.filter-bar-label{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-right: 4px;
 }
+.filter-select{
+  appearance: none;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
+  padding: 6px 32px 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: border-color .15s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.filter-select:hover{
+  border-color: var(--gray-300);
+}
+.filter-select:focus{
+  outline: none;
+  border-color: var(--navy-700);
+  box-shadow: 0 0 0 2px rgba(27,58,92,.1);
+}
+.filter-divider{
+  width: 1px;
+  height: 24px;
+  background: var(--gray-200);
+  margin: 0 4px;
+}
+.filter-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--navy-50);
+  border: 1px solid var(--navy-100);
+  color: var(--navy-700);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+
+/* ── MAIN CONTENT ────────────────────────────────────── */
+.main{
+  padding: 28px 32px 48px;
+  max-width: 1320px;
+  flex: 1;
+}
+.panel{display:none}
+.panel.on{display:block;animation:fadeIn .2s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION ─────────────────────────────────────────── */
+.sec{margin-bottom:28px}
 .sec-hdr{
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e8e6e4;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 .sec-accent{
-  display: none;
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 .sec-lbl{
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-secondary);
-  margin: 0;
+  letter-spacing: .08em;
+  color: var(--gray-500);
 }
 
-/* ── alerts ─────────────────────────────────────────── */
+/* ── ALERT ───────────────────────────────────────────── */
 .alert{
   display: flex;
-  gap: 14px;
-  padding: 14px 18px;
+  gap: 12px;
+  padding: 12px 16px;
   font-size: 13px;
   margin-bottom: 12px;
   align-items: flex-start;
+  border-radius: var(--radius);
   border: 1px solid;
-  background-color: var(--bg-primary);
 }
 .alert.info{
-  border-color: #b8d9c6;
-  color: #004f20;
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info);
 }
 .alert.warn{
-  border-color: #f4a460;
-  color: #5c3700;
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning);
 }
 .alert span:first-child{
-  font-weight: 600;
+  font-weight: 700;
   flex-shrink: 0;
-  font-size: 12px;
-  min-width: 14px;
+  font-size: 14px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ── kpi grid ─────────────────────────────────────────── */
+/* ── SUMMARY STRIP ───────────────────────────────────── */
+.summary-strip{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.ss-item{
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 20px 20px 18px;
+  position: relative;
+}
+.ss-item::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.ss-item:nth-child(1)::before{background: var(--navy-700)}
+.ss-item:nth-child(2)::before{background: var(--green-700)}
+.ss-item:nth-child(3)::before{background: var(--teal-700)}
+.ss-item:nth-child(4)::before{background: var(--navy-600)}
+.ss-lbl{
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 8px;
+}
+.ss-val{
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.ss-val.nd{
+  color: var(--gray-300);
+  font-size: 22px;
+}
+
+/* ── KPI GRID ────────────────────────────────────────── */
 .kg{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 16px;
 }
 .kpi{
-  background: var(--bg-primary);
-  border: 1px solid #e8e6e4;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
   padding: 20px;
   position: relative;
-  overflow: hidden;
 }
 .kpi::before{
   content: '';
@@ -248,98 +427,90 @@ body{
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--kpi-accent, var(--primary));
+  background: var(--kpi-accent, var(--navy-700));
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 .kpi-top{
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .kpi-id{
   font-size: 10px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
-.kpi-ico{
-  display: none;
-}
+.kpi-ico{display:none}
 .kpi-lbl{
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--gray-600);
   margin-bottom: 10px;
   line-height: 1.4;
-  font-weight: 400;
+  font-weight: 500;
 }
 .kpi-val{
-  font-size: 32px;
-  font-weight: 300;
-  color: var(--primary);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--gray-900);
   line-height: 1;
   letter-spacing: -0.02em;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .kpi-val.nd{
-  color: #d4d2d0;
-  font-size: 24px;
+  color: var(--gray-300);
+  font-size: 22px;
+  font-weight: 500;
 }
 .kpi-footer{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 .kpi-meta{
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
 }
 .kpi-pct{
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 1px 6px;
+  padding: 2px 8px;
+  border-radius: 3px;
   display: none;
 }
 .kpi-bar{
   height: 4px;
-  background: #e8e6e4;
+  background: var(--gray-100);
   margin-top: 12px;
+  border-radius: 2px;
   overflow: hidden;
 }
 .kpi-fill{
   height: 4px;
   width: 0;
+  border-radius: 2px;
   transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* ── grids ────────────────────────────────────────────── */
-.g2{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-.g3{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 14px;
-}
-.g4{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-}
+/* ── GRIDS ───────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 
-/* ── card ─────────────────────────────────────────────── */
+/* ── CARD ────────────────────────────────────────────── */
 .card{
-  background: var(--bg-primary);
-  border: 1px solid #e8e6e4;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
   padding: 24px;
 }
 .card-ttl{
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -349,119 +520,121 @@ body{
 }
 .card-id{
   font-size: 10px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  border: 1px solid var(--border);
-  padding: 2px 7px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  padding: 2px 8px;
+  border-radius: 3px;
 }
 .hr{
   height: 1px;
-  background: #e8e6e4;
+  background: var(--gray-100);
   margin: 14px 0 16px;
 }
 
-/* ── mini-kpi ─────────────────────────────────────────── */
+/* ── MINI KPI ────────────────────────────────────────── */
 .mk{
-  background: var(--gray-light);
+  background: var(--gray-50);
   padding: 14px 16px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
 }
 .mk-lbl{
   font-size: 11px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
+  color: var(--gray-500);
+  margin-bottom: 6px;
   line-height: 1.4;
-  font-weight: 400;
+  font-weight: 500;
 }
 .mk-val{
-  font-size: 24px;
-  font-weight: 300;
-  color: var(--primary);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gray-900);
   letter-spacing: -0.01em;
 }
 .mk-val.nd{
-  color: #d4d2d0;
+  color: var(--gray-300);
   font-size: 18px;
+  font-weight: 500;
 }
 .mk-sub{
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   margin-top: 4px;
 }
 
-/* ── progress row ─────────────────────────────────────── */
+/* ── PROGRESS ROW ────────────────────────────────────── */
 .pr{
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
-.pr:last-of-type{
-  margin-bottom: 0;
-}
+.pr:last-of-type{margin-bottom:0}
 .pr-lbl{
   font-size: 12px;
-  color: var(--text-secondary);
-  width: 180px;
+  color: var(--gray-600);
+  width: 200px;
   flex-shrink: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
 }
 .pr-id{
   font-size: 10px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   margin-left: 4px;
 }
 .pr-bg{
   flex: 1;
-  height: 5px;
-  background: #e8e6e4;
+  height: 6px;
+  background: var(--gray-100);
+  border-radius: 3px;
   overflow: hidden;
 }
 .pr-fill{
-  height: 5px;
+  height: 6px;
   width: 0;
+  border-radius: 3px;
   transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .pr-v{
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-primary);
-  width: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-800);
+  width: 56px;
   text-align: right;
 }
 .pr-v.nd{
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   font-weight: 400;
 }
 
-/* ── funnel ───────────────────────────────────────────── */
+/* ── FUNNEL ──────────────────────────────────────────── */
 .funnel{
   display: flex;
   flex-direction: column;
-  gap: 1px;
-  padding: 0;
-  background: var(--border);
+  gap: 2px;
 }
 .funnel-step{
   position: relative;
   overflow: hidden;
-  background: var(--bg-primary);
-  border: none;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
   min-height: 68px;
 }
-.funnel-bg{
-  display: none;
-}
+.funnel-bg{display:none}
 .funnel-bar{
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  opacity: 0.08;
+  opacity: 0.06;
   transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .funnel-content{
@@ -472,93 +645,82 @@ body{
   justify-content: space-between;
   padding: 16px 20px;
 }
-.funnel-info{
-}
 .funnel-name{
   font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 600;
+  color: var(--gray-800);
 }
 .funnel-id{
   font-size: 10px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   margin-left: 8px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: .06em;
 }
 .funnel-meta{
   font-size: 11px;
-  color: var(--text-secondary);
+  color: var(--gray-500);
   margin-top: 3px;
 }
-.funnel-right{
-  text-align: right;
-}
+.funnel-right{text-align:right}
 .funnel-val{
-  font-size: 28px;
-  font-weight: 300;
+  font-size: 26px;
+  font-weight: 700;
   line-height: 1;
-  color: var(--primary);
+  color: var(--gray-900);
   letter-spacing: -0.01em;
 }
 .funnel-val.nd{
-  color: #d4d2d0;
+  color: var(--gray-300);
   font-size: 20px;
+  font-weight: 500;
 }
 .funnel-pct{
   font-size: 11px;
   font-weight: 500;
   margin-top: 4px;
-  color: var(--text-secondary);
+  color: var(--gray-500);
 }
 
-/* ── table ────────────────────────────────────────────── */
-.tw{
-  overflow-x: auto;
-}
+/* ── TABLE ───────────────────────────────────────────── */
+.tw{overflow-x:auto}
 table{
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
-thead{
-  background: var(--gray-light);
-}
+thead{background:var(--gray-50)}
 th{
   text-align: left;
-  padding: 12px 14px;
-  color: var(--text-secondary);
+  padding: 10px 14px;
+  color: var(--gray-500);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border-bottom: 1px solid var(--border);
+  letter-spacing: .06em;
+  border-bottom: 1px solid var(--gray-200);
   white-space: nowrap;
-  font-weight: 600;
 }
 td{
-  padding: 12px 14px;
-  border-bottom: 1px solid #f0ede8;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-100);
   vertical-align: middle;
-  color: var(--text-primary);
+  color: var(--gray-700);
 }
-tr:last-child td{
-  border-bottom: none;
-}
-tr:hover td{
-  background: #fdfcfb;
-}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gray-50)}
 
-/* ── badge ────────────────────────────────────────────── */
+/* ── BADGE ───────────────────────────────────────────── */
 .bdg{
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   padding: 3px 10px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
+  border-radius: 3px;
   border: 1px solid;
 }
 .bdg::before{
@@ -569,413 +731,391 @@ tr:hover td{
   flex-shrink: 0;
 }
 .bdg-ok{
-  background: #f0f9f1;
-  border-color: #9cd4a0;
-  color: #004f20;
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
 }
-.bdg-ok::before{
-  background: #107C10;
-}
+.bdg-ok::before{background:var(--success)}
 .bdg-warn{
-  background: #fff9f5;
-  border-color: #f0a8a0;
-  color: #d83b01;
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning);
 }
-.bdg-warn::before{
-  background: #d83b01;
-}
+.bdg-warn::before{background:var(--warning)}
 .bdg-nd{
-  background: #f5f5f3;
-  border-color: #e8e6e4;
-  color: #605e5c;
+  background: var(--gray-50);
+  border-color: var(--gray-200);
+  color: var(--gray-500);
 }
-.bdg-nd::before{
-  background: #aaa99d;
-}
+.bdg-nd::before{background:var(--gray-400)}
 .bdg-tl{
-  background: #f0f9f1;
-  border-color: #9cd4a0;
-  color: #004f20;
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
 }
-.bdg-tl::before{
-  background: #107C10;
-}
+.bdg-tl::before{background:var(--success)}
 
-/* ── chip ─────────────────────────────────────────────── */
+/* ── CHIP ────────────────────────────────────────────── */
 .chip{
   display: inline-block;
-  background: #f5f5f3;
-  color: var(--text-secondary);
-  padding: 3px 10px;
+  background: var(--gray-50);
+  color: var(--gray-600);
+  padding: 2px 10px;
   font-size: 11px;
   font-weight: 500;
   margin: 2px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--gray-200);
+  border-radius: 3px;
 }
 
-/* ── radar placeholder ────────────────────────────────── */
+/* ── RADAR PLACEHOLDER ───────────────────────────────── */
 .radar-ph{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 220px;
-  background: var(--gray-light);
-  color: var(--text-secondary);
+  height: 200px;
+  background: var(--gray-50);
+  color: var(--gray-500);
   font-size: 13px;
-  gap: 10px;
-  border: 1px solid var(--border);
+  font-weight: 500;
+  gap: 8px;
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--radius);
 }
-.radar-ico{
-  display: none;
-}
+.radar-ico{display:none}
 .radar-sub{
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   text-align: center;
-  max-width: 260px;
-  line-height: 1.6;
+  max-width: 280px;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
-/* ── footnote ────────────────────────────────────────── */
+/* ── FOOTNOTE ────────────────────────────────────────── */
 .footnote{
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   margin-top: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
   padding-top: 10px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--gray-100);
 }
 
-/* ── summary metrics strip ───────────────────────────── */
-.summary-strip{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 0;
-  padding: 0;
-  background: var(--primary);
-  margin-bottom: 36px;
-  overflow: hidden;
-  border: 1px solid #003d99;
-}
-.ss-item{
-  text-align: center;
-  padding: 24px 16px;
-  position: relative;
-  border-right: 1px solid rgba(255,255,255,0.1);
-}
-.ss-item:last-child{
-  border-right: none;
-}
-.ss-val{
-  font-size: 28px;
-  font-weight: 300;
-  color: #ffffff;
-  letter-spacing: -0.01em;
-}
-.ss-val.nd{
-  color: rgba(255,255,255,.4);
-  font-size: 22px;
-}
-.ss-lbl{
-  font-size: 11px;
-  color: rgba(255,255,255,.7);
-  margin-top: 6px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 500;
-}
+/* ── CHARTS ──────────────────────────────────────────── */
+.card canvas{max-height:280px}
 
-/* ── charts & visualizations ───────────────────────── */
-.card canvas{
-  max-height: 280px;
-}
-
-/* ── maps ──────────────────────────────────────────── */
+/* ── MAPS ────────────────────────────────────────────── */
 .map-container{
   height: 300px;
   margin: 16px 0;
-  border: 1px solid var(--border);
-  background: #f9f8f6;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  background: var(--gray-50);
+  overflow: hidden;
 }
-
-.leaflet-container{
-  font-family: 'Roboto', sans-serif !important;
-}
-
+.leaflet-container{font-family:'Inter',sans-serif !important}
 .leaflet-popup-content-wrapper{
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
 }
-
 .leaflet-popup-content{
-  color: var(--text-primary);
+  color: var(--gray-700);
   font-size: 12px;
   margin: 4px 0;
 }
-
 .leaflet-control-attribution{
   font-size: 10px;
-  background: rgba(255,255,255,.8);
-  border: 1px solid var(--border);
+  background: rgba(255,255,255,.85);
 }
 
-.marker-green{
-  filter: hue-rotate(0deg) saturate(1.2) brightness(0.95);
-}
-
-.marker-blue{
-  filter: hue-rotate(220deg) saturate(1.1) brightness(0.95);
-}
-
-/* ── animations ───────────────────────────────────────── */
-@keyframes fadeIn{
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-.panel.on{
-  animation: fadeIn 0.2s ease both;
-}
-
-/* ── footer ───────────────────────────────────────────── */
+/* ── FOOTER ──────────────────────────────────────────── */
 .footer{
-  background: var(--bg-primary);
-  border-top: 1px solid var(--border);
-  padding: 28px 48px;
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+  padding: 20px 32px;
   text-align: center;
-  color: var(--text-tertiary);
+  color: var(--gray-400);
   font-size: 12px;
-  margin-top: 48px;
-  letter-spacing: 0.01em;
 }
 
-/* ── responsive ───────────────────────────────────────── */
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media(max-width:1024px){
+  :root{--sidebar-w:0px}
+  .sidebar{
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+  }
+  .sidebar.open{
+    transform: translateX(0);
+    width: 280px;
+  }
+  .mobile-toggle{display:block}
+  .sidebar-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.3);
+    z-index: 99;
+  }
+  .sidebar-overlay.open{display:block}
+}
 @media(max-width:900px){
-  .kg{
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .g2, .g3, .g4{
-    grid-template-columns: 1fr;
-  }
-  .top-bar{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 24px;
-  }
-  .top-ribbon{
-    padding: 8px 24px;
-  }
-  .fonte-bar{
-    padding: 8px 24px;
-  }
-  .tabs{
-    padding: 0 24px;
-  }
-  .main{
-    padding: 28px 24px;
-  }
-  .summary-strip{
-    grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 24px;
-  }
-  .footer{
-    padding: 20px 24px;
-  }
+  .kg{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .summary-strip{grid-template-columns:repeat(2,1fr)}
+  .topbar{padding:0 20px}
+  .filter-bar{padding:12px 20px}
+  .main{padding:20px}
+  .topbar-meta{display:none}
+}
+@media(max-width:640px){
+  .summary-strip{grid-template-columns:1fr}
+  .kg{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ── TOP ──────────────────────────────────────────────── -->
-<div class="top">
-  <div class="top-bar">
-    <div class="top-left">
-      <!-- TNC Logo Mark - Institutional Blue -->
-      <div class="top-logo" aria-label="The Nature Conservancy">
-        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M50 8C28 8 12 26 16 50C19 68 30 82 50 90C70 82 81 68 84 50C88 26 72 8 50 8Z" fill="#0052CC"/>
-          <path d="M50 90L50 28" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-          <path d="M50 52L32 38" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M50 68L68 50" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="top-wordmark">
-        <div class="top-brand">The Nature Conservancy</div>
-        <h1>Dashboard MEL · Agricultura Familiar no Pará</h1>
-        <div class="sub">Pará, Brasil · Programa Accenture / GlobalGiving</div>
-      </div>
-    </div>
-    <div class="top-meta">
-      <div class="top-stat">
-        <div class="ts-lbl">Quinzena</div>
-        <div class="ts-val" id="hdr-quinzena">—</div>
-      </div>
-      <div class="top-stat">
-        <div class="ts-lbl">Período</div>
-        <div class="ts-val" id="hdr-periodo">—</div>
-      </div>
-      <div class="top-stat">
-        <div class="ts-lbl">Atualizado</div>
-        <div class="ts-val" id="hdr-data">—</div>
-      </div>
-    </div>
+<!-- ── SIDEBAR OVERLAY (mobile) ────────────────────────── -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-org">The Nature Conservancy</div>
+    <div class="sidebar-title">Dashboard MEL</div>
+    <div class="sidebar-subtitle">Agricultura Familiar no Pará</div>
   </div>
-  <div class="top-ribbon">
-    <span class="rb-highlight">TNC Brasil</span>
-    <span class="rb-sep">·</span>
-    <span>Parceiros implementadores:</span>
-    <span>Crescer</span><span class="rb-sep">·</span>
-    <span>Solidaridad</span><span class="rb-sep">·</span>
-    <span>UNICAFES</span><span class="rb-sep">·</span>
-    <span>FUNEP</span><span class="rb-sep">·</span>
-    <span>Sense-Lab</span><span class="rb-sep">·</span>
-    <span>Creditares</span><span class="rb-sep">·</span>
-    <span>ISES</span>
-    <span class="rb-sep" style="margin-left:auto">·</span>
-    <span>Territórios: Transamazônica · Sudeste do Pará</span>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">Monitoramento</div>
+      <button class="nav-item on" onclick="tab('geral',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>
+        Visao Geral
+      </button>
+      <button class="nav-item" onclick="tab('individuos',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="6" r="3.5"/><path d="M3 17.5c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>
+        Individuos · P1
+      </button>
+      <button class="nav-item" onclick="tab('p2',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v16M2 10h16"/><circle cx="10" cy="10" r="7"/></svg>
+        Desenv. Territorial · P2
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Resultados</div>
+      <button class="nav-item" onclick="tab('resultados',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17V9l4-5 4 3 6-5"/><path d="M13 2h5v5"/></svg>
+        Resultados CP / MP
+      </button>
+      <button class="nav-item" onclick="tab('qualidade',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2l2.5 5H18l-4 3.5 1.5 5.5L10 13l-5.5 3 1.5-5.5L2 7h5.5z"/></svg>
+        Qualidade dos Dados
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Cadastro</div>
+      <button class="nav-item" onclick="tab('cadastro',this)">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="2" width="14" height="16" rx="1.5"/><path d="M7 6h6M7 10h6M7 14h4"/></svg>
+        Pessoas & Organizacoes
+      </button>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Elaborado por Olab
   </div>
-</div>
+</aside>
 
-<!-- ── TABS ─────────────────────────────────────────────── -->
-<div class="tabs">
-  <button class="tab on"  onclick="tab('geral',this)">Visão Geral</button>
-  <button class="tab"     onclick="tab('individuos',this)">Indivíduos · P1</button>
-  <button class="tab"     onclick="tab('p2',this)">Desenv. Territorial · P2</button>
-  <button class="tab"     onclick="tab('resultados',this)">Resultados CP / MP</button>
-  <button class="tab"     onclick="tab('qualidade',this)">Qualidade dos Dados</button>
-  <button class="tab"     onclick="tab('cadastro',this)">Pessoas & Organizações</button>
-</div>
+<!-- ── APP CONTENT ─────────────────────────────────────── -->
+<div class="app-content">
 
-<div class="main">
+  <!-- ── TOP BAR ─────────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menu">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h16M3 11h16M3 16h16"/></svg>
+      </button>
+      <div class="topbar-page" id="topbar-page">Visao Geral</div>
+    </div>
+    <div class="topbar-meta">
+      <div class="topbar-tag">Quinzena <strong id="hdr-quinzena">—</strong></div>
+      <div class="topbar-tag">Periodo <strong id="hdr-periodo">—</strong></div>
+      <div class="topbar-tag">Atualizado <strong id="hdr-data">—</strong></div>
+    </div>
+  </header>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  VISÃO GERAL                                          -->
-<!-- ══════════════════════════════════════════════════════ -->
+  <!-- ── FILTER BAR ──────────────────────────────────────── -->
+  <div class="filter-bar">
+    <span class="filter-bar-label">Filtros</span>
+    <select class="filter-select" id="filter-territorio" title="Territorio">
+      <option value="todos">Todos os territorios</option>
+      <option value="transamazonica">Transamazonica</option>
+      <option value="sudeste">Sudeste do Para</option>
+    </select>
+    <select class="filter-select" id="filter-parceiro" title="Parceiro">
+      <option value="todos">Todos os parceiros</option>
+      <option value="crescer">Crescer</option>
+      <option value="solidaridad">Solidaridad</option>
+      <option value="unicafes">UNICAFES</option>
+      <option value="funep">FUNEP</option>
+      <option value="senselab">Sense-Lab</option>
+      <option value="creditares">Creditares</option>
+      <option value="ises">ISES</option>
+    </select>
+    <select class="filter-select" id="filter-periodo" title="Periodo">
+      <option value="acumulado">Acumulado</option>
+      <option value="trimestre">Ultimo trimestre</option>
+      <option value="semestre">Ultimo semestre</option>
+    </select>
+    <div class="filter-divider"></div>
+    <span class="filter-tag">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4"/><path d="M6 4v4M4 6h4"/></svg>
+      Para, Brasil
+    </span>
+    <span class="filter-tag">Accenture / GlobalGiving</span>
+  </div>
+
+  <div class="main">
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  VISAO GERAL                                            -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel on" id="p-geral">
 
   <div id="alertas" class="sec"></div>
 
-  <!-- resumo rápido -->
   <div class="summary-strip" id="summary-strip">
-    <div class="ss-item"><div class="ss-val nd" id="ss-total">—</div><div class="ss-lbl">Total pessoas alcançadas</div></div>
-    <div class="ss-item"><div class="ss-val nd" id="ss-prog">—</div><div class="ss-lbl">Taxa de progressão</div></div>
-    <div class="ss-item"><div class="ss-val nd" id="ss-eixos">—</div><div class="ss-lbl">Eixos P2 ativos</div></div>
-    <div class="ss-item"><div class="ss-val nd" id="ss-parceiros">—</div><div class="ss-lbl">Parceiros reportando</div></div>
+    <div class="ss-item">
+      <div class="ss-lbl">Total pessoas alcancadas</div>
+      <div class="ss-val nd" id="ss-total">—</div>
+    </div>
+    <div class="ss-item">
+      <div class="ss-lbl">Taxa de progressao</div>
+      <div class="ss-val nd" id="ss-prog">—</div>
+    </div>
+    <div class="ss-item">
+      <div class="ss-lbl">Eixos P2 ativos</div>
+      <div class="ss-val nd" id="ss-eixos">—</div>
+    </div>
+    <div class="ss-item">
+      <div class="ss-lbl">Parceiros reportando</div>
+      <div class="ss-val nd" id="ss-parceiros">—</div>
+    </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--green-700)"></div><div class="sec-lbl">Programa 1 — Treinamentos · Pessoas</div></div>
     <div class="kg">
-      <div class="kpi" style="--kpi-accent:#007931">
+      <div class="kpi" style="--kpi-accent:var(--navy-700)">
         <div class="kpi-top"><div class="kpi-id">1.1.1</div></div>
         <div class="kpi-lbl">Conectadas</div>
         <div class="kpi-val nd" id="k-con">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 1.000 pessoas</div><div class="kpi-pct" id="k-con-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-con"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--navy-700)" id="b-con"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#4aa241">
+      <div class="kpi" style="--kpi-accent:var(--green-700)">
         <div class="kpi-top"><div class="kpi-id">1.2.1</div></div>
         <div class="kpi-lbl">Melhoradas</div>
         <div class="kpi-val nd" id="k-mel">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 800 pessoas</div><div class="kpi-pct" id="k-mel-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-mel"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--green-700)" id="b-mel"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#0c834c">
+      <div class="kpi" style="--kpi-accent:var(--teal-700)">
         <div class="kpi-top"><div class="kpi-id">1.3.1</div></div>
         <div class="kpi-lbl">Transformadas</div>
         <div class="kpi-val nd" id="k-tra">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150–200 pessoas</div><div class="kpi-pct" id="k-tra-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#0c834c" id="b-tra"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--teal-700)" id="b-tra"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#4aa241">
+      <div class="kpi" style="--kpi-accent:var(--green-700)">
         <div class="kpi-top"><div class="kpi-id">2.2.2</div></div>
-        <div class="kpi-lbl">Progressão Con → Mel</div>
+        <div class="kpi-lbl">Progressao Con → Mel</div>
         <div class="kpi-val nd" id="k-prog">—</div>
-        <div class="kpi-footer"><div class="kpi-meta">referência: ≥ 80%</div><div class="kpi-pct" id="k-prog-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-prog"></div></div>
+        <div class="kpi-footer"><div class="kpi-meta">referencia: ≥ 80%</div><div class="kpi-pct" id="k-prog-pct"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--green-700)" id="b-prog"></div></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--navy-700)"></div><div class="sec-lbl">Programa 2 — Desenvolvimento Territorial · Eixos principais</div></div>
     <div class="kg">
-      <div class="kpi" style="--kpi-accent:#007931">
+      <div class="kpi" style="--kpi-accent:var(--navy-700)">
         <div class="kpi-top"><div class="kpi-id">1.4.1</div></div>
         <div class="kpi-lbl">Agricultores com ATER</div>
         <div class="kpi-val nd" id="k-ater">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 150 agricultores</div><div class="kpi-pct" id="k-ater-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#007931" id="b-ater"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--navy-700)" id="b-ater"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#4aa241">
+      <div class="kpi" style="--kpi-accent:var(--green-700)">
         <div class="kpi-top"><div class="kpi-id">1.5.1</div></div>
         <div class="kpi-lbl">CARs regularizados</div>
         <div class="kpi-val nd" id="k-car">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~50 propriedades</div><div class="kpi-pct" id="k-car-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-car"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--green-700)" id="b-car"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#4aa241">
+      <div class="kpi" style="--kpi-accent:var(--teal-700)">
         <div class="kpi-top"><div class="kpi-id">1.6.1</div></div>
         <div class="kpi-lbl">PRADAs elaborados</div>
         <div class="kpi-val nd" id="k-prada">—</div>
-        <div class="kpi-footer"><div class="kpi-meta">meta: 50 relatórios</div><div class="kpi-pct" id="k-prada-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#4aa241" id="b-prada"></div></div>
+        <div class="kpi-footer"><div class="kpi-meta">meta: 50 relatorios</div><div class="kpi-pct" id="k-prada-pct"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--teal-700)" id="b-prada"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#2b7bb9">
+      <div class="kpi" style="--kpi-accent:var(--navy-600)">
         <div class="kpi-top"><div class="kpi-id">1.7.2</div></div>
-        <div class="kpi-lbl">Projetos crédito submetidos</div>
+        <div class="kpi-lbl">Projetos credito submetidos</div>
         <div class="kpi-val nd" id="k-cred">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: ~40 projetos</div><div class="kpi-pct" id="k-cred-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#2b7bb9" id="b-cred"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--navy-600)" id="b-cred"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#7d6447">
+      <div class="kpi" style="--kpi-accent:var(--gray-600)">
         <div class="kpi-top"><div class="kpi-id">1.8.1</div></div>
         <div class="kpi-lbl">UDs implantadas</div>
         <div class="kpi-val nd" id="k-uds">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–10 UDs</div><div class="kpi-pct" id="k-uds-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#7d6447" id="b-uds"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--gray-600)" id="b-uds"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:#0c834c">
+      <div class="kpi" style="--kpi-accent:var(--green-800)">
         <div class="kpi-top"><div class="kpi-id">1.9.1 · 1.10.1</div></div>
-        <div class="kpi-lbl">Organizações + Redes</div>
+        <div class="kpi-lbl">Organizacoes + Redes</div>
         <div class="kpi-val nd" id="k-org">—</div>
         <div class="kpi-footer"><div class="kpi-meta">meta: 8–12 org · 2 redes</div><div class="kpi-pct" id="k-org-pct"></div></div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:#0c834c" id="b-org"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--green-800)" id="b-org"></div></div>
       </div>
     </div>
   </div>
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Evolução de pessoas por nível <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
+      <div class="card-ttl">Evolucao de pessoas por nivel <span class="card-id">1.1.1 · 1.2.1 · 1.3.1</span></div>
       <div style="position:relative;height:240px"><canvas id="ch-pessoas"></canvas></div>
       <div class="footnote">Por quinzena · fonte: base consolidada Olab · meta indicada pela linha tracejada</div>
     </div>
     <div class="card">
       <div class="card-ttl">Progresso por eixo do P2 (% da meta)</div>
       <div style="position:relative;height:240px"><canvas id="ch-eixos"></canvas></div>
-      <div class="footnote">Fonte: relatórios dos parceiros sistematizados pela Olab</div>
+      <div class="footnote">Fonte: relatorios dos parceiros sistematizados pela Olab</div>
     </div>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  INDIVÍDUOS · P1                                      -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  INDIVIDUOS · P1                                        -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel" id="p-individuos">
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Funil de progressão <span class="card-id">1.1.1 → 1.3.1</span></div>
+      <div class="card-ttl">Funil de progressao <span class="card-id">1.1.1 → 1.3.1</span></div>
       <div class="hr"></div>
       <div class="funnel">
         <div class="funnel-step">
-          <div class="funnel-bg" style="background:var(--dk)"></div>
-          <div class="funnel-bar" style="background:var(--dk)" id="pf-con"></div>
+          <div class="funnel-bar" style="background:var(--navy-700)" id="pf-con"></div>
           <div class="funnel-content">
             <div class="funnel-info">
               <div class="funnel-name">Conectadas <span class="funnel-id">1.1.1</span></div>
@@ -983,13 +1123,12 @@ tr:hover td{
             </div>
             <div class="funnel-right">
               <div class="funnel-val nd" id="pv-con">—</div>
-              <div class="funnel-pct" style="color:var(--dk)" id="fpct-con"></div>
+              <div class="funnel-pct" id="fpct-con"></div>
             </div>
           </div>
         </div>
         <div class="funnel-step">
-          <div class="funnel-bg" style="background:var(--tl)"></div>
-          <div class="funnel-bar" style="background:var(--tl)" id="pf-mel"></div>
+          <div class="funnel-bar" style="background:var(--green-700)" id="pf-mel"></div>
           <div class="funnel-content">
             <div class="funnel-info">
               <div class="funnel-name">Melhoradas <span class="funnel-id">1.2.1</span></div>
@@ -997,13 +1136,12 @@ tr:hover td{
             </div>
             <div class="funnel-right">
               <div class="funnel-val nd" id="pv-mel">—</div>
-              <div class="funnel-pct" style="color:var(--tl2)" id="fpct-mel"></div>
+              <div class="funnel-pct" id="fpct-mel"></div>
             </div>
           </div>
         </div>
         <div class="funnel-step">
-          <div class="funnel-bg" style="background:var(--bl)"></div>
-          <div class="funnel-bar" style="background:var(--bl)" id="pf-tra"></div>
+          <div class="funnel-bar" style="background:var(--teal-700)" id="pf-tra"></div>
           <div class="funnel-content">
             <div class="funnel-info">
               <div class="funnel-name">Transformadas <span class="funnel-id">1.3.1</span></div>
@@ -1011,39 +1149,39 @@ tr:hover td{
             </div>
             <div class="funnel-right">
               <div class="funnel-val nd" id="pv-tra">—</div>
-              <div class="funnel-pct" style="color:var(--bl)" id="fpct-tra"></div>
+              <div class="funnel-pct" id="fpct-tra"></div>
             </div>
           </div>
         </div>
       </div>
       <div class="footnote">
-        Controle de unicidade por CPF/nome + município · Coleta quinzenal pelos parceiros · Consolidação Olab
+        Controle de unicidade por CPF/nome + municipio · Coleta quinzenal pelos parceiros · Consolidacao Olab
       </div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Avaliação qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
+      <div class="card-ttl">Avaliacao qualitativa da ATER <span class="card-id">2.1.2 · 2.1.3 · 2.1.4 · 2.1.5</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:12px">
-        <div class="mk"><div class="mk-lbl">% com prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Média práticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Prop. com mudança verificável (2.1.4)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">% com mudança observável (2.1.5)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">% com pratica adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Media praticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Prop. com mudanca verificavel (2.1.4)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">% com mudanca observavel (2.1.5)</div><div class="mk-val nd">—</div></div>
       </div>
       <div class="footnote">
-        Amostra intencional estratificada: 50 visitas Olab · 32 Transamazônica + 18 Sudeste do Pará<br>
+        Amostra intencional estratificada: 50 visitas Olab · 32 Transamazonica + 18 Sudeste do Para<br>
         Periodicidade: semestral (ciclos de campo) · Instrumento: KoboToolbox
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Contribuição por parceiro — Conectadas (1.1.1)</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--navy-700)"></div><div class="sec-lbl">Contribuicao por parceiro — Conectadas (1.1.1)</div></div>
     <div class="card">
       <div class="card-ttl">Pessoas conectadas por parceiro implementador</div>
       <div class="hr"></div>
       <div style="position:relative;height:240px"><canvas id="ch-parceiros"></canvas></div>
-      <div class="footnote">Dados virão da planilha vinculada — cada parceiro reporta quinzenalmente</div>
+      <div class="footnote">Dados virao da planilha vinculada — cada parceiro reporta quinzenalmente</div>
     </div>
   </div>
 
@@ -1051,42 +1189,42 @@ tr:hover td{
     <div class="card">
       <div class="card-ttl">ATER — agricultores atendidos <span class="card-id">1.4.1 · 1.4.2</span></div>
       <div class="hr"></div>
-      <div class="pr"><span class="pr-lbl">Crescer</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Solidaridad</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
-      <div style="margin-top:8px;padding-top:12px;border-top:1px solid #f0f0ee">
-        <div class="pr"><span class="pr-lbl">Total agricultores (meta 150)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)" id="pf-ater"></div></div><span class="pr-v nd" id="pv-ater">—</span></div>
-        <div class="pr"><span class="pr-lbl">Total visitas realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Crescer</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-700)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Solidaridad</span><div class="pr-bg"><div class="pr-fill" style="background:var(--green-700)"></div></div><span class="pr-v nd">—</span></div>
+      <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--gray-100)">
+        <div class="pr"><span class="pr-lbl">Total agricultores (meta 150)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--teal-700)" id="pf-ater"></div></div><span class="pr-v nd" id="pv-ater">—</span></div>
+        <div class="pr"><span class="pr-lbl">Total visitas realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-500)"></div></div><span class="pr-v nd">—</span></div>
       </div>
-      <div class="footnote">Coleta mensal pelos parceiros · Verificação amostral semestral pela Olab</div>
+      <div class="footnote">Coleta mensal pelos parceiros · Verificacao amostral semestral pela Olab</div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Regularização ambiental <span class="card-id">1.5.1 · 1.6.1</span></div>
+      <div class="card-ttl">Regularizacao ambiental <span class="card-id">1.5.1 · 1.6.1</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
         <div class="mk"><div class="mk-lbl">CARs regularizados (1.5.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: ~50</div></div>
         <div class="mk"><div class="mk-lbl">PRADAs elaborados (1.6.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 50</div></div>
       </div>
-      <div class="pr"><span class="pr-lbl">CARs (Solidaridad + Crescer)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)" id="pf-car"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">PRADAs (Solidaridad)</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c" id="pf-prada"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">CARs (Solidaridad + Crescer)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--green-700)" id="pf-car"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">PRADAs (Solidaridad)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-500)" id="pf-prada"></div></div><span class="pr-v nd">—</span></div>
       <div class="footnote">Periodicidade: semestral · Cruzamento com PLANAVEG pela Olab</div>
     </div>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  DESENV. TERRITORIAL · P2                             -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  DESENV. TERRITORIAL · P2                               -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel" id="p-p2">
 
   <div class="g2 sec">
     <div class="card">
-      <div class="card-ttl">Crédito rural <span class="card-id">1.7.1 · 1.7.2 · 2.4.1 · 2.4.2</span></div>
+      <div class="card-ttl">Credito rural <span class="card-id">1.7.1 · 1.7.2 · 2.4.1 · 2.4.2</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
-        <div class="mk"><div class="mk-lbl">Dossiês elaborados (1.7.1)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Submetidos às inst. financeiras (1.7.2)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Dossies elaborados (1.7.1)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Submetidos as inst. financeiras (1.7.2)</div><div class="mk-val nd">—</div></div>
         <div class="mk"><div class="mk-lbl">Aprovados (2.4.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: ~40</div></div>
         <div class="mk"><div class="mk-lbl">Valor total acessado R$ (2.4.2)</div><div class="mk-val nd">—</div></div>
       </div>
@@ -1101,7 +1239,7 @@ tr:hover td{
         <div class="mk"><div class="mk-lbl">Treinamentos realizados (1.8.2)</div><div class="mk-val nd">—</div></div>
         <div class="mk"><div class="mk-lbl">Tecnologias aplicadas (1.8.3)</div><div class="mk-val nd">—</div></div>
       </div>
-      <div class="pr"><div class="pr-lbl">Participantes por UD — total (1.8.4)</div><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><div class="pr-lbl">Participantes por UD — total (1.8.4)</div><div class="pr-bg"><div class="pr-fill" style="background:var(--teal-700)"></div></div><span class="pr-v nd">—</span></div>
       <div class="footnote">Trimestral · Crescer, FUNEP, Solidaridad · Fichas padronizadas por UD</div>
     </div>
   </div>
@@ -1110,169 +1248,167 @@ tr:hover td{
     <div class="card">
       <div class="card-ttl">Maturidade institucional — KSI D1 <span class="card-id">1.9.1 · 2.5.1 – 2.5.4</span></div>
       <div class="hr"></div>
-      <div class="pr"><span class="pr-lbl">Org. com plano estratégico (1.9.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Cooperados ativos (2.5.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Parcerias firmadas (2.5.2)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Editais acessados (2.5.3)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
-      <div class="pr"><span class="pr-lbl">Novos mercados (2.5.4)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
-      <div class="footnote">Semestral · ISES, UNICAFES, Terra Preta · Verificação documental Olab</div>
+      <div class="pr"><span class="pr-lbl">Org. com plano estrategico (1.9.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-700)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Cooperados ativos (2.5.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--green-700)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Parcerias firmadas (2.5.2)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--teal-700)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Editais acessados (2.5.3)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-600)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="pr"><span class="pr-lbl">Novos mercados (2.5.4)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-600)"></div></div><span class="pr-v nd">—</span></div>
+      <div class="footnote">Semestral · ISES, UNICAFES, Terra Preta · Verificacao documental Olab</div>
     </div>
 
     <div class="card">
-      <div class="card-ttl">Governança e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
+      <div class="card-ttl">Governanca e mercados — KSI K1 · D3 <span class="card-id">1.10.1 · 1.11.1 · 2.6.1 · 2.7.1 · 2.9.1</span></div>
       <div class="hr"></div>
       <div class="g2" style="margin-bottom:14px">
         <div class="mk"><div class="mk-lbl">Redes ativas (1.10.1 / 2.6.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 2 redes</div></div>
         <div class="mk"><div class="mk-lbl">Compras coletivas realizadas (1.11.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta a definir</div></div>
-        <div class="mk"><div class="mk-lbl">Volume compras públicas R$ (2.7.1)</div><div class="mk-val nd">—</div></div>
-        <div class="mk"><div class="mk-lbl">Redução custo insumos (2.9.1)</div><div class="mk-val nd">—</div><div class="mk-sub">% vs. antes negociação</div></div>
+        <div class="mk"><div class="mk-lbl">Volume compras publicas R$ (2.7.1)</div><div class="mk-val nd">—</div></div>
+        <div class="mk"><div class="mk-lbl">Reducao custo insumos (2.9.1)</div><div class="mk-val nd">—</div><div class="mk-sub">% vs. antes negociacao</div></div>
       </div>
-      <div class="footnote">Sense-Lab (redes) · UNICAFES (mercados) · Semestral · Cálculo diferencial: Olab</div>
+      <div class="footnote">Sense-Lab (redes) · UNICAFES (mercados) · Semestral · Calculo diferencial: Olab</div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--tr)"></div><div class="sec-lbl">Tabela de situação das UDs (1.8.1)</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--teal-700)"></div><div class="sec-lbl">Tabela de situacao das UDs (1.8.1)</div></div>
     <div class="card">
       <div class="tw">
         <table>
-          <thead><tr><th>Município</th><th>Território</th><th>Parceiro</th><th>Tipo/Foco</th><th>Status</th><th>Treinamentos</th><th>Participantes</th><th>Tecnologias</th></tr></thead>
+          <thead><tr><th>Municipio</th><th>Territorio</th><th>Parceiro</th><th>Tipo/Foco</th><th>Status</th><th>Treinamentos</th><th>Participantes</th><th>Tecnologias</th></tr></thead>
           <tbody>
-            <tr><td>Altamira</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Pecuária sustentável</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
-            <tr><td>Medicilândia</td><td>Transamazônica</td><td><span class="chip">Solidaridad</span></td><td>Cacau / SAF</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
-            <tr><td>Tucumã</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / Cooperfruti</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
-            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">Crescer</span></td><td>SAF / CACUXI</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
-            <tr><td>São Félix do Xingu</td><td>Sudeste do Pará</td><td><span class="chip">FUNEP</span></td><td>Pecuária intensiva (NICFI)</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td></tr>
+            <tr><td>Altamira</td><td>Transamazonica</td><td><span class="chip">Solidaridad</span></td><td>Pecuaria sustentavel</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td></tr>
+            <tr><td>Medicilandia</td><td>Transamazonica</td><td><span class="chip">Solidaridad</span></td><td>Cacau / SAF</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td></tr>
+            <tr><td>Tucuma</td><td>Sudeste do Para</td><td><span class="chip">Crescer</span></td><td>SAF / Cooperfruti</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td></tr>
+            <tr><td>Sao Felix do Xingu</td><td>Sudeste do Para</td><td><span class="chip">Crescer</span></td><td>SAF / CACUXI</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td></tr>
+            <tr><td>Sao Felix do Xingu</td><td>Sudeste do Para</td><td><span class="chip">FUNEP</span></td><td>Pecuaria intensiva (NICFI)</td><td><span class="bdg bdg-nd">Sem dados</span></td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td><td style="color:var(--gray-300)">—</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="footnote">Dados virão da planilha vinculada · Meta: 8–10 UDs · Parceiros: Crescer, FUNEP, Solidaridad</div>
+      <div class="footnote">Dados virao da planilha vinculada · Meta: 8–10 UDs · Parceiros: Crescer, FUNEP, Solidaridad</div>
     </div>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  RESULTADOS CP / MP                                   -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  RESULTADOS CP / MP                                     -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel" id="p-resultados">
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--tl)"></div><div class="sec-lbl">Resultados de curto prazo — KSIs da ToC TNC</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--green-700)"></div><div class="sec-lbl">Resultados de curto prazo — KSIs da ToC TNC</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">KSI A3 · Práticas regenerativas adotadas <span class="card-id">2.1.2 – 2.1.5 · 2.1.8</span></div>
+        <div class="card-ttl">KSI A3 · Praticas regenerativas adotadas <span class="card-id">2.1.2 – 2.1.5 · 2.1.8</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
-          <div class="mk"><div class="mk-lbl">% produtores c/ prática adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
-          <div class="mk"><div class="mk-lbl">Média práticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
-          <div class="mk"><div class="mk-lbl">Prop. c/ evidência verificável (2.1.4)</div><div class="mk-val nd">—</div></div>
-          <div class="mk"><div class="mk-lbl">% c/ mudança observável (2.1.5)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">% produtores c/ pratica adotada (2.1.2)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">Media praticas/produtor (2.1.3)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">Prop. c/ evidencia verificavel (2.1.4)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">% c/ mudanca observavel (2.1.5)</div><div class="mk-val nd">—</div></div>
         </div>
-        <div class="footnote">Percepção qualitativa (2.1.8) · 50 visitas Olab · Semestral · KoboToolbox</div>
+        <div class="footnote">Percepcao qualitativa (2.1.8) · 50 visitas Olab · Semestral · KoboToolbox</div>
       </div>
 
       <div class="card">
         <div class="card-ttl">KSI B1 · D2 · D1 · K1 · D3 <span class="card-id">2.2–2.7</span></div>
         <div class="hr"></div>
-        <div class="pr"><span class="pr-lbl">Pessoas melhoradas (2.2.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v nd">—</span></div>
-        <div class="pr"><span class="pr-lbl">Tecnologias testadas nas UDs (2.3.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v nd">—</span></div>
-        <div class="pr"><span class="pr-lbl">Acesso a crédito aprovado (2.4.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v nd">—</span></div>
-        <div class="pr"><span class="pr-lbl">Redes ativas (2.6.1)</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v nd">—</span></div>
-        <div class="pr"><span class="pr-lbl">Compras c/ redução documentada (2.7.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Pessoas melhoradas (2.2.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--green-700)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Tecnologias testadas nas UDs (2.3.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--teal-700)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Acesso a credito aprovado (2.4.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-700)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Redes ativas (2.6.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-600)"></div></div><span class="pr-v nd">—</span></div>
+        <div class="pr"><span class="pr-lbl">Compras c/ reducao documentada (2.7.1)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-600)"></div></div><span class="pr-v nd">—</span></div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--bl)"></div><div class="sec-lbl">Resultados de médio prazo — Métricas TNC 2030</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--navy-700)"></div><div class="sec-lbl">Resultados de medio prazo — Metricas TNC 2030</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">Terras com Gestão Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
+        <div class="card-ttl">Terras com Gestao Melhorada (ha) <span class="card-id">3.1.1 · Lands Metrics TNC</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
-          <div class="mk"><div class="mk-lbl">ha com gestão melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div class="mk-sub">mín. 2/3 atributos Lands Metrics</div></div>
+          <div class="mk"><div class="mk-lbl">ha com gestao melhorada verificada (3.1.1)</div><div class="mk-val nd">—</div><div class="mk-sub">min. 2/3 atributos Lands Metrics</div></div>
           <div class="mk"><div class="mk-lbl">Pessoas transformadas c/ CAR (3.2.2)</div><div class="mk-val nd">—</div></div>
         </div>
         <div class="radar-ph">
-          <div class="radar-ico"></div>
-          <div>Análise geoespacial</div>
-          <div class="radar-sub">CAR + PRODES/Deter + PLANAVEG · Disponível ao final do P2 (mar/2027)</div>
+          <div>Analise geoespacial</div>
+          <div class="radar-sub">CAR + PRODES/Deter + PLANAVEG · Disponivel ao final do P2 (mar/2027)</div>
         </div>
-        <div class="footnote">Olab (geoespacial) · TNC Brasil (validação Lands Metrics v2) · Anual</div>
+        <div class="footnote">Olab (geoespacial) · TNC Brasil (validacao Lands Metrics v2) · Anual</div>
       </div>
 
       <div class="card">
-        <div class="card-ttl">Pessoas — Métricas TNC 2030 <span class="card-id">3.2.1 · 3.3.1 · 3.4.1 · 3.5.1</span></div>
+        <div class="card-ttl">Pessoas — Metricas TNC 2030 <span class="card-id">3.2.1 · 3.3.1 · 3.4.1 · 3.5.1</span></div>
         <div class="hr"></div>
         <div class="g2" style="margin-bottom:14px">
           <div class="mk"><div class="mk-lbl">Pessoas transformadas acumuladas (3.2.1)</div><div class="mk-val nd">—</div><div class="mk-sub">meta: 150–200 · People Metrics TNC</div></div>
-          <div class="mk"><div class="mk-lbl">Oportunidade econômica sustentável (3.3.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
-          <div class="mk"><div class="mk-lbl">Capacidade tomada de decisão (3.4.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
-          <div class="mk"><div class="mk-lbl">Arranjos com redução de custo (3.5.1)</div><div class="mk-val nd">—</div></div>
+          <div class="mk"><div class="mk-lbl">Oportunidade economica sustentavel (3.3.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Capacidade tomada de decisao (3.4.1)</div><div class="mk-val nd">—</div><div class="mk-sub">People Metrics TNC 2030</div></div>
+          <div class="mk"><div class="mk-lbl">Arranjos com reducao de custo (3.5.1)</div><div class="mk-val nd">—</div></div>
         </div>
-        <div class="footnote">Verificação: 4 perguntas People Metrics v2 · Semestral/acumulado · Olab + TNC Brasil</div>
+        <div class="footnote">Verificacao: 4 perguntas People Metrics v2 · Semestral/acumulado · Olab + TNC Brasil</div>
       </div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--dk)"></div><div class="sec-lbl">Impacto de longo prazo — contribuição do projeto (proxy)</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--gray-600)"></div><div class="sec-lbl">Impacto de longo prazo — contribuicao do projeto (proxy)</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">Áreas críticas conservadas / restauradas <span class="card-id">4.1.1</span></div>
+        <div class="card-ttl">Areas criticas conservadas / restauradas <span class="card-id">4.1.1</span></div>
         <div class="hr"></div>
-        <div class="mk" style="margin-bottom:12px"><div class="mk-lbl">ha sob mecanismo de conservação ou restauração (proxy)</div><div class="mk-val nd">—</div><div class="mk-sub">Mensurável ao final do projeto · PRODES + PLANAVEG + MapBiomas</div></div>
-        <div class="footnote">Impacto de longo prazo — fora do prazo contratual direto<br>Contribuição parcial estimada via dados de sensoriamento remoto</div>
+        <div class="mk" style="margin-bottom:12px"><div class="mk-lbl">ha sob mecanismo de conservacao ou restauracao (proxy)</div><div class="mk-val nd">—</div><div class="mk-sub">Mensuravel ao final do projeto · PRODES + PLANAVEG + MapBiomas</div></div>
+        <div class="footnote">Impacto de longo prazo — fora do prazo contratual direto<br>Contribuicao parcial estimada via dados de sensoriamento remoto</div>
       </div>
       <div class="card">
-        <div class="card-ttl">Governança territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
+        <div class="card-ttl">Governanca territorial fortalecida <span class="card-id">4.2.1 · Spider Radar</span></div>
         <div class="hr"></div>
         <div class="radar-ph">
-          <div class="radar-ico"></div>
-          <div>Spider Radar — Escala de maturidade de governança</div>
-          <div class="radar-sub">6 dimensões · Aplicado nas Oficinas de Pausa e Reflexão</div>
+          <div>Spider Radar — Escala de maturidade de governanca</div>
+          <div class="radar-sub">6 dimensoes · Aplicado nas Oficinas de Pausa e Reflexao</div>
         </div>
-        <div class="footnote">Avaliação qualitativa Olab · Final do P2 (mar/2027) · People Metrics TNC: Tomada de Decisão</div>
+        <div class="footnote">Avaliacao qualitativa Olab · Final do P2 (mar/2027) · People Metrics TNC: Tomada de Decisao</div>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  QUALIDADE DOS DADOS                                  -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  QUALIDADE DOS DADOS                                    -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel" id="p-qualidade">
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--gn)"></div><div class="sec-lbl">Controle de qualidade · Quinzena atual</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--navy-700)"></div><div class="sec-lbl">Controle de qualidade · Quinzena atual</div></div>
     <div class="g4">
-      <div class="kpi" style="--kpi-accent:var(--dk)">
+      <div class="kpi" style="--kpi-accent:var(--navy-700)">
         <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Registros recebidos</div>
         <div class="kpi-val nd" id="kq-rec">—</div>
         <div class="kpi-meta">nesta quinzena</div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--tl)">
+      <div class="kpi" style="--kpi-accent:var(--green-700)">
         <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Registros validados</div>
         <div class="kpi-val nd" id="kq-val">—</div>
         <div class="kpi-meta" id="kq-pct">% do total</div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--tl)" id="bq-val"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--green-700)" id="bq-val"></div></div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--am)">
+      <div class="kpi" style="--kpi-accent:var(--warning)">
         <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Lacunas pendentes</div>
         <div class="kpi-val nd" id="kq-lac">—</div>
-        <div class="kpi-meta">requerem correção</div>
+        <div class="kpi-meta">requerem correcao</div>
       </div>
-      <div class="kpi" style="--kpi-accent:var(--dk)">
+      <div class="kpi" style="--kpi-accent:var(--teal-700)">
         <div class="kpi-top"><div class="kpi-id">QC</div></div>
         <div class="kpi-lbl">Docs. digitalizados</div>
         <div class="kpi-val nd" id="kq-dig">—</div>
         <div class="kpi-meta">do acumulado</div>
-        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--dk)" id="bq-dig"></div></div>
+        <div class="kpi-bar"><div class="kpi-fill" style="background:var(--teal-700)" id="bq-dig"></div></div>
       </div>
     </div>
   </div>
@@ -1283,15 +1419,15 @@ tr:hover td{
       <div class="hr"></div>
       <div class="tw">
         <table>
-          <thead><tr><th>Parceiro</th><th>Tipo de entrega</th><th>Periodicidade</th><th>Última entrega</th><th>Status</th></tr></thead>
+          <thead><tr><th>Parceiro</th><th>Tipo de entrega</th><th>Periodicidade</th><th>Ultima entrega</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>Crescer</td><td>Listas presença + relatórios ATER</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>Solidaridad</td><td>Listas presença + relatórios ATER + CAR/PRADA</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>UNICAFES</td><td>Relatórios institucionais + compras coletivas</td><td>Semestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>FUNEP</td><td>Fichas de UD + relatórios de campo</td><td>Trimestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>Sense-Lab</td><td>Atas de redes + planos estratégicos</td><td>Trimestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>Creditares</td><td>Extrato AgroOpen + relatórios de crédito</td><td>Mensal</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
-            <tr><td>ISES</td><td>Diagnósticos SWOT + planos estratégicos</td><td>Semestral</td><td style="color:#ccc">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Crescer</td><td>Listas presenca + relatorios ATER</td><td>Mensal</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Solidaridad</td><td>Listas presenca + relatorios ATER + CAR/PRADA</td><td>Mensal</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>UNICAFES</td><td>Relatorios institucionais + compras coletivas</td><td>Semestral</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>FUNEP</td><td>Fichas de UD + relatorios de campo</td><td>Trimestral</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Sense-Lab</td><td>Atas de redes + planos estrategicos</td><td>Trimestral</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>Creditares</td><td>Extrato AgroOpen + relatorios de credito</td><td>Mensal</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
+            <tr><td>ISES</td><td>Diagnosticos SWOT + planos estrategicos</td><td>Semestral</td><td style="color:var(--gray-300)">—</td><td><span class="bdg bdg-nd">Aguardando</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -1300,50 +1436,50 @@ tr:hover td{
     <div class="card">
       <div class="card-ttl">Controle de campo — amostragem Olab</div>
       <div class="hr"></div>
-      <div class="pr"><span class="pr-lbl">Visitas ATER realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:var(--dk)"></div></div><span class="pr-v">—/50</span></div>
-      <div class="pr"><span class="pr-lbl" title="Transamazônica">↳ Transamazônica</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tl)"></div></div><span class="pr-v">—/32</span></div>
-      <div class="pr"><span class="pr-lbl" title="Sudeste do Pará">↳ Sudeste do Pará</span><div class="pr-bg"><div class="pr-fill" style="background:var(--bl)"></div></div><span class="pr-v">—/18</span></div>
+      <div class="pr"><span class="pr-lbl">Visitas ATER realizadas</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-700)"></div></div><span class="pr-v">—/50</span></div>
+      <div class="pr"><span class="pr-lbl" title="Transamazonica">↳ Transamazonica</span><div class="pr-bg"><div class="pr-fill" style="background:var(--green-700)"></div></div><span class="pr-v">—/32</span></div>
+      <div class="pr"><span class="pr-lbl" title="Sudeste do Para">↳ Sudeste do Para</span><div class="pr-bg"><div class="pr-fill" style="background:var(--teal-700)"></div></div><span class="pr-v">—/18</span></div>
       <div class="hr"></div>
-      <div class="pr"><span class="pr-lbl">Verificação amostral (10%)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--tr)"></div></div><span class="pr-v">—</span></div>
-      <div class="pr"><span class="pr-lbl">Auditorias de organizações</span><div class="pr-bg"><div class="pr-fill" style="background:#543017"></div></div><span class="pr-v">—</span></div>
-      <div class="pr"><span class="pr-lbl">Duplicatas identificadas e removidas</span><div class="pr-bg"><div class="pr-fill" style="background:#c7ab8c"></div></div><span class="pr-v">—</span></div>
+      <div class="pr"><span class="pr-lbl">Verificacao amostral (10%)</span><div class="pr-bg"><div class="pr-fill" style="background:var(--navy-600)"></div></div><span class="pr-v">—</span></div>
+      <div class="pr"><span class="pr-lbl">Auditorias de organizacoes</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-600)"></div></div><span class="pr-v">—</span></div>
+      <div class="pr"><span class="pr-lbl">Duplicatas identificadas e removidas</span><div class="pr-bg"><div class="pr-fill" style="background:var(--gray-500)"></div></div><span class="pr-v">—</span></div>
       <div class="footnote" style="margin-top:10px">
-        Próximas oficinas de pausa e reflexão: datas a confirmar com TNC Brasil<br>
-        Controle de unicidade por CPF/nome + município · Base centralizada Olab
+        Proximas oficinas de pausa e reflexao: datas a confirmar com TNC Brasil<br>
+        Controle de unicidade por CPF/nome + municipio · Base centralizada Olab
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- ══════════════════════════════════════════════════════ -->
-<!--  PESSOAS & ORGANIZAÇÕES                               -->
-<!-- ══════════════════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!--  PESSOAS & ORGANIZACOES                                 -->
+<!-- ════════════════════════════════════════════════════════ -->
 <div class="panel" id="p-cadastro">
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Territórios de Atuação</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--green-700)"></div><div class="sec-lbl">Territorios de Atuacao</div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-ttl">Transamazônica — 7 municípios</div>
+        <div class="card-ttl">Transamazonica — 7 municipios</div>
         <div class="hr"></div>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
-          <strong>Municípios:</strong> Altamira, Brasil Novo, Medicilândia, Uruará, Placas, Novo Repartimento e Pacajá.
+        <p style="font-size:13px;color:var(--gray-600);line-height:1.6;margin-bottom:12px">
+          <strong>Municipios:</strong> Altamira, Brasil Novo, Medicilandia, Uruara, Placas, Novo Repartimento e Pacaja.
         </p>
-        <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
-          Principal foco de atividades de ATER e Unidades Demonstrativas. Concentra a maioria do trabalho de capacitação e transferência de tecnologia agrícola.
+        <p style="font-size:12px;color:var(--gray-500);line-height:1.5">
+          Principal foco de atividades de ATER e Unidades Demonstrativas. Concentra a maioria do trabalho de capacitacao e transferencia de tecnologia agricola.
         </p>
         <div id="map-transamazonica" class="map-container"></div>
       </div>
 
       <div class="card">
-        <div class="card-ttl">Sudeste do Pará — 4 municípios</div>
+        <div class="card-ttl">Sudeste do Para — 4 municipios</div>
         <div class="hr"></div>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
-          <strong>Municípios:</strong> Tucumã, São Félix do Xingu, Ourilândia do Norte e Água Azul do Norte.
+        <p style="font-size:13px;color:var(--gray-600);line-height:1.6;margin-bottom:12px">
+          <strong>Municipios:</strong> Tucuma, Sao Felix do Xingu, Ourilandia do Norte e Agua Azul do Norte.
         </p>
-        <p style="font-size: 12px; color: var(--text-tertiary); line-height: 1.5;">
-          Presença forte via Crescer (Cooperfruti em Tucumã, CACUXI em São Félix) e FUNEP (UDs de pecuária sustentável).
+        <p style="font-size:12px;color:var(--gray-500);line-height:1.5">
+          Presenca forte via Crescer (Cooperfruti em Tucuma, CACUXI em Sao Felix) e FUNEP (UDs de pecuaria sustentavel).
         </p>
         <div id="map-sudeste" class="map-container"></div>
       </div>
@@ -1351,83 +1487,101 @@ tr:hover td{
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Cadastro de Pessoas</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--navy-700)"></div><div class="sec-lbl">Cadastro de Pessoas</div></div>
     <div class="card">
-      <div class="card-ttl">Registro de Indivíduos Beneficiários</div>
+      <div class="card-ttl">Registro de Individuos Beneficiarios</div>
       <div class="hr"></div>
       <div class="tw">
         <table>
           <thead>
-            <tr><th>ID</th><th>Nome</th><th>Município</th><th>Território</th><th>Sexo</th><th>Etapa</th><th>Data Registro</th></tr>
+            <tr><th>ID</th><th>Nome</th><th>Municipio</th><th>Territorio</th><th>Sexo</th><th>Etapa</th><th>Data Registro</th></tr>
           </thead>
           <tbody>
-            <tr><td>P001</td><td>Maria da Silva Santos</td><td>Altamira</td><td>Transamazônica</td><td>F</td><td>Conectada</td><td>15/01/2025</td></tr>
-            <tr><td>P002</td><td>João Costa Ferreira</td><td>Brasil Novo</td><td>Transamazônica</td><td>M</td><td>Melhorada</td><td>20/01/2025</td></tr>
-            <tr><td>P003</td><td>Ana Paula Oliveira</td><td>Medicilândia</td><td>Transamazônica</td><td>F</td><td>Transformada</td><td>25/01/2025</td></tr>
-            <tr><td>P004</td><td>Carlos Alberto Souza</td><td>Uruará</td><td>Transamazônica</td><td>M</td><td>Conectada</td><td>02/02/2025</td></tr>
-            <tr><td>P005</td><td>Francisca Mendes</td><td>Placas</td><td>Transamazônica</td><td>F</td><td>Melhorada</td><td>10/02/2025</td></tr>
-            <tr><td>P006</td><td>José Ribeiro Pereira</td><td>Novo Repartimento</td><td>Transamazônica</td><td>M</td><td>Conectada</td><td>18/02/2025</td></tr>
-            <tr><td>P007</td><td>Rosane da Cruz Silva</td><td>Pacajá</td><td>Transamazônica</td><td>F</td><td>Melhorada</td><td>28/02/2025</td></tr>
-            <tr><td>P008</td><td>Roberto Gomes Santos</td><td>Tucumã</td><td>Sudeste</td><td>M</td><td>Transformada</td><td>05/03/2025</td></tr>
-            <tr><td>P009</td><td>Antônio Lopes Dias</td><td>São Félix do Xingu</td><td>Sudeste</td><td>M</td><td>Conectada</td><td>12/03/2025</td></tr>
-            <tr><td>P010</td><td>Mariana Rodrigues Costa</td><td>Ourilândia do Norte</td><td>Sudeste</td><td>F</td><td>Melhorada</td><td>20/03/2025</td></tr>
+            <tr><td>P001</td><td>Maria da Silva Santos</td><td>Altamira</td><td>Transamazonica</td><td>F</td><td>Conectada</td><td>15/01/2025</td></tr>
+            <tr><td>P002</td><td>Joao Costa Ferreira</td><td>Brasil Novo</td><td>Transamazonica</td><td>M</td><td>Melhorada</td><td>20/01/2025</td></tr>
+            <tr><td>P003</td><td>Ana Paula Oliveira</td><td>Medicilandia</td><td>Transamazonica</td><td>F</td><td>Transformada</td><td>25/01/2025</td></tr>
+            <tr><td>P004</td><td>Carlos Alberto Souza</td><td>Uruara</td><td>Transamazonica</td><td>M</td><td>Conectada</td><td>02/02/2025</td></tr>
+            <tr><td>P005</td><td>Francisca Mendes</td><td>Placas</td><td>Transamazonica</td><td>F</td><td>Melhorada</td><td>10/02/2025</td></tr>
+            <tr><td>P006</td><td>Jose Ribeiro Pereira</td><td>Novo Repartimento</td><td>Transamazonica</td><td>M</td><td>Conectada</td><td>18/02/2025</td></tr>
+            <tr><td>P007</td><td>Rosane da Cruz Silva</td><td>Pacaja</td><td>Transamazonica</td><td>F</td><td>Melhorada</td><td>28/02/2025</td></tr>
+            <tr><td>P008</td><td>Roberto Gomes Santos</td><td>Tucuma</td><td>Sudeste</td><td>M</td><td>Transformada</td><td>05/03/2025</td></tr>
+            <tr><td>P009</td><td>Antonio Lopes Dias</td><td>Sao Felix do Xingu</td><td>Sudeste</td><td>M</td><td>Conectada</td><td>12/03/2025</td></tr>
+            <tr><td>P010</td><td>Mariana Rodrigues Costa</td><td>Ourilandia do Norte</td><td>Sudeste</td><td>F</td><td>Melhorada</td><td>20/03/2025</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="footnote">Coleta: Listas de presença dos parceiros + formulários quinzenais · Consolidação: Base Olab</div>
+      <div class="footnote">Coleta: Listas de presenca dos parceiros + formularios quinzenais · Consolidacao: Base Olab</div>
     </div>
   </div>
 
   <div class="sec">
-    <div class="sec-hdr"><div class="sec-accent" style="background:var(--primary)"></div><div class="sec-lbl">Organizações Sociais Parceiras</div></div>
+    <div class="sec-hdr"><div class="sec-accent" style="background:var(--teal-700)"></div><div class="sec-lbl">Organizacoes Sociais Parceiras</div></div>
     <div class="card">
-      <div class="card-ttl">Registro Institucional — Cooperativas e Associações</div>
+      <div class="card-ttl">Registro Institucional — Cooperativas e Associacoes</div>
       <div class="hr"></div>
       <div class="tw">
         <table>
           <thead>
-            <tr><th>Organização</th><th>Tipo</th><th>Município</th><th>Representante</th><th>Membros</th><th>Status</th></tr>
+            <tr><th>Organizacao</th><th>Tipo</th><th>Municipio</th><th>Representante</th><th>Membros</th><th>Status</th></tr>
           </thead>
           <tbody>
-            <tr><td>Associação de Agricultores de Altamira</td><td>Associação</td><td>Altamira</td><td>José dos Santos</td><td>78</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Cooperativa Brasil Novo Solidária</td><td>Cooperativa</td><td>Brasil Novo</td><td>Maria Ferreira</td><td>45</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Associação Medicilândia Sustentável</td><td>Associação</td><td>Medicilândia</td><td>Paulo Gomes</td><td>52</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Cooperfruti Tucumã</td><td>Cooperativa</td><td>Tucumã</td><td>Roberto Silva</td><td>168</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Associação CACUXI São Félix</td><td>Associação</td><td>São Félix do Xingu</td><td>Antônio Lopes</td><td>89</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Associação Produtores Ourilândia</td><td>Associação</td><td>Ourilândia do Norte</td><td>Francisca Cruz</td><td>34</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Rede Transamazônica de Agroecologia</td><td>Rede</td><td>Altamira</td><td>Dácio Ribeiro</td><td>245</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
-            <tr><td>Rede Sudeste Solidária</td><td>Rede</td><td>Tucumã</td><td>Luiz Fernando</td><td>198</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associacao de Agricultores de Altamira</td><td>Associacao</td><td>Altamira</td><td>Jose dos Santos</td><td>78</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Cooperativa Brasil Novo Solidaria</td><td>Cooperativa</td><td>Brasil Novo</td><td>Maria Ferreira</td><td>45</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associacao Medicilandia Sustentavel</td><td>Associacao</td><td>Medicilandia</td><td>Paulo Gomes</td><td>52</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Cooperfruti Tucuma</td><td>Cooperativa</td><td>Tucuma</td><td>Roberto Silva</td><td>168</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associacao CACUXI Sao Felix</td><td>Associacao</td><td>Sao Felix do Xingu</td><td>Antonio Lopes</td><td>89</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Associacao Produtores Ourilandia</td><td>Associacao</td><td>Ourilandia do Norte</td><td>Francisca Cruz</td><td>34</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Rede Transamazonica de Agroecologia</td><td>Rede</td><td>Altamira</td><td>Dacio Ribeiro</td><td>245</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
+            <tr><td>Rede Sudeste Solidaria</td><td>Rede</td><td>Tucuma</td><td>Luiz Fernando</td><td>198</td><td><span class="bdg bdg-ok">Ativa</span></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="footnote">Verificação: levantamento semestral de maturidade institucional · Responsável: Olab + Sense-Lab</div>
+      <div class="footnote">Verificacao: levantamento semestral de maturidade institucional · Responsavel: Olab + Sense-Lab</div>
     </div>
   </div>
 
 </div>
 
-</div>
-</div><!-- /.main -->
+  </div><!-- /.main -->
+
+  <div class="footer">
+    Elaborado por Olab
+  </div>
+
+</div><!-- /.app-content -->
 
 <script>
-// ── config ───────────────────────────────────────────────
-const DATA_URL = 'js/mock.json'; // ← trocar por URL da planilha real
+const DATA_URL = 'js/mock.json';
 const METAS = {con:1000,mel:800,tra:175,ater:150,car:50,prada:50,cred:40,uds:10};
 
-// ── tab nav ──────────────────────────────────────────────
+const PAGE_TITLES = {
+  geral: 'Visao Geral',
+  individuos: 'Individuos · P1',
+  p2: 'Desenv. Territorial · P2',
+  resultados: 'Resultados CP / MP',
+  qualidade: 'Qualidade dos Dados',
+  cadastro: 'Pessoas & Organizacoes'
+};
+
 function tab(id,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   btn.classList.add('on');
   document.getElementById('p-'+id).classList.add('on');
-
-  // Initialize maps when cadastro tab is opened
-  if(id === 'cadastro'){
-    setTimeout(initMaps, 100);
-  }
+  document.getElementById('topbar-page').textContent = PAGE_TITLES[id] || id;
+  if(id === 'cadastro') setTimeout(initMaps, 100);
+  closeSidebar();
 }
 
-// ── helpers ──────────────────────────────────────────────
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
 const f = v => v!=null ? v.toLocaleString('pt-BR') : '—';
 const pct = (v,m) => m&&v!=null ? Math.min(100,Math.round(v/m*100)) : 0;
 
@@ -1441,14 +1595,12 @@ function setKpi(id,val,meta,barId){
     const b=document.getElementById(barId);
     if(b) setTimeout(()=>{b.style.width=p+'%'},80);
   }
-  // update percentage badge if it exists
   const pctEl=document.getElementById(id+'-pct');
   if(pctEl && val!=null && meta){
     pctEl.textContent=p+'%';
     pctEl.style.display='inline-block';
-    // color based on progress
-    const color = p>=75 ? '#1a5c1a' : p>=40 ? '#7a4e00' : '#c25730';
-    const bg = p>=75 ? '#e4f6e4' : p>=40 ? '#fef3dd' : '#fde8e0';
+    const color = p>=75 ? '#166534' : p>=40 ? '#92400E' : '#991B1B';
+    const bg = p>=75 ? '#F0FDF4' : p>=40 ? '#FFFBEB' : '#FEF2F2';
     pctEl.style.color=color;
     pctEl.style.background=bg;
   }
@@ -1461,38 +1613,34 @@ function setPr(fillId,valId,val,meta){
   if(v2){v2.textContent=f(val);v2.classList.toggle('nd',val==null);}
 }
 
-// ── Chart.js defaults ────────────────────────────────────
-Chart.defaults.font.family = "'Segoe UI',-apple-system,Arial,sans-serif";
+Chart.defaults.font.family = "'Inter',-apple-system,'Segoe UI',sans-serif";
 
-// ── gráficos ─────────────────────────────────────────────
 function initCharts(d){
   const labels=['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13'];
   const sCon = d.seriesCon || [45,78,112,151,190,228,261,285,298,312,null,null,null];
   const sMel = d.seriesMel || [12,35,55,78,104,130,152,168,180,189,null,null,null];
   const sTra = d.seriesTra || [3,7,12,18,24,29,33,37,39,41,null,null,null];
 
-  // evolução pessoas — Institutional style
   new Chart(document.getElementById('ch-pessoas'),{
     type:'line',
     data:{labels,datasets:[
-      {label:'Conectadas',    data:sCon,borderColor:'#107C10',backgroundColor:'rgba(16,124,16,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#107C10',borderWidth:2,pointHoverRadius:6},
-      {label:'Melhoradas',    data:sMel,borderColor:'#0052CC',backgroundColor:'rgba(0,82,204,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#0052CC',borderWidth:2,pointHoverRadius:6},
-      {label:'Transformadas', data:sTra,borderColor:'#004f20',backgroundColor:'rgba(0,79,32,.06)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#004f20',borderWidth:2,pointHoverRadius:6},
+      {label:'Conectadas',    data:sCon,borderColor:'#1B3A5C',backgroundColor:'rgba(27,58,92,.04)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#1B3A5C',borderWidth:2,pointHoverRadius:5},
+      {label:'Melhoradas',    data:sMel,borderColor:'#15803D',backgroundColor:'rgba(21,128,61,.04)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#15803D',borderWidth:2,pointHoverRadius:5},
+      {label:'Transformadas', data:sTra,borderColor:'#0F766E',backgroundColor:'rgba(15,118,110,.04)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#0F766E',borderWidth:2,pointHoverRadius:5},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{intersect:false,mode:'index'},
       plugins:{
-        legend:{position:'bottom',labels:{font:{size:12,weight:'500'},padding:14,usePointStyle:true,pointStyle:'circle',color:'#323130'}},
-        tooltip:{backgroundColor:'rgba(50,49,48,.95)',titleFont:{size:12},bodyFont:{size:11},padding:10,cornerRadius:0,displayColors:true}
+        legend:{position:'bottom',labels:{font:{size:11,weight:'500'},padding:16,usePointStyle:true,pointStyle:'circle',color:'#374151'}},
+        tooltip:{backgroundColor:'#1F2937',titleFont:{size:12,weight:'600'},bodyFont:{size:11},padding:10,cornerRadius:4,displayColors:true}
       },
       scales:{
-        y:{beginAtZero:true,grid:{color:'#e8e6e4',drawBorder:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}},
-        x:{grid:{display:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}}
+        y:{beginAtZero:true,grid:{color:'#F3F4F6',drawBorder:false},ticks:{color:'#6B7280',font:{size:11}},border:{display:false}},
+        x:{grid:{display:false},ticks:{color:'#6B7280',font:{size:11}},border:{display:false}}
       }
     }
   });
 
-  // progresso eixos P2 — Institutional style
   const eixosPct = [
     pct(d.ater,METAS.ater), pct(d.car,METAS.car), pct(d.prada,METAS.prada),
     pct(d.cred,METAS.cred), pct(d.uds,METAS.uds), 0, 0
@@ -1500,25 +1648,24 @@ function initCharts(d){
   new Chart(document.getElementById('ch-eixos'),{
     type:'bar',
     data:{
-      labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Crédito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
+      labels:['ATER (1.4)','CAR (1.5)','PRADA (1.6)','Credito (1.7)','UDs (1.8)','Org. (1.9)','Redes (1.10)'],
       datasets:[{label:'% realizado',data:eixosPct,
-        backgroundColor:['#107C10','#0052CC','#004f20','#107C10','#004f20','#0052CC','#107C10'],
-        borderRadius:0,barThickness:18,
-        hoverBackgroundColor:['#005a23','#003d99','#002a12','#005a23','#002a12','#003d99','#005a23']}]
+        backgroundColor:['#1B3A5C','#15803D','#0F766E','#244B72','#374151','#1B3A5C','#15803D'],
+        borderRadius:3,barThickness:16,
+        hoverBackgroundColor:['#0C1D36','#166534','#115E59','#122A4E','#1F2937','#0C1D36','#166534']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        tooltip:{backgroundColor:'rgba(50,49,48,.95)',callbacks:{label:ctx=>ctx.raw+'% da meta'},cornerRadius:0}
+        tooltip:{backgroundColor:'#1F2937',callbacks:{label:ctx=>ctx.raw+'% da meta'},cornerRadius:4}
       },
       scales:{
-        x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#605e5c',font:{size:11}},grid:{color:'#e8e6e4',drawBorder:false},border:{display:false}},
-        y:{ticks:{color:'#323130',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
+        x:{min:0,max:100,ticks:{callback:v=>v+'%',color:'#6B7280',font:{size:11}},grid:{color:'#F3F4F6',drawBorder:false},border:{display:false}},
+        y:{ticks:{color:'#374151',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
       }
     }
   });
 
-  // parceiros (horizontal bar) — Institutional style
   const parcLabels = d.parceiros ? Object.keys(d.parceiros) : ['Crescer','Solidaridad','UNICAFES','FUNEP','Sense-Lab','Creditares','ISES'];
   const parcData = d.parceiros ? Object.values(d.parceiros) : [112,89,45,38,18,6,4];
   new Chart(document.getElementById('ch-parceiros'),{
@@ -1526,132 +1673,78 @@ function initCharts(d){
     data:{
       labels:parcLabels,
       datasets:[{label:'Conectadas',data:parcData,
-        backgroundColor:['#107C10','#0052CC','#004f20','#107C10','#0052CC','#004f20','#107C10'],
-        borderRadius:0,barThickness:22,
-        hoverBackgroundColor:['#005a23','#003d99','#002a12','#005a23','#003d99','#002a12','#005a23']}]
+        backgroundColor:['#1B3A5C','#15803D','#0F766E','#244B72','#374151','#1B3A5C','#15803D'],
+        borderRadius:3,barThickness:20,
+        hoverBackgroundColor:['#0C1D36','#166534','#115E59','#122A4E','#1F2937','#0C1D36','#166534']}]
     },
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        tooltip:{backgroundColor:'rgba(50,49,48,.95)',cornerRadius:0}
+        tooltip:{backgroundColor:'#1F2937',cornerRadius:4}
       },
       scales:{
-        x:{beginAtZero:true,grid:{color:'#e8e6e4',drawBorder:false},ticks:{color:'#605e5c',font:{size:11}},border:{display:false}},
-        y:{ticks:{color:'#323130',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
+        x:{beginAtZero:true,grid:{color:'#F3F4F6',drawBorder:false},ticks:{color:'#6B7280',font:{size:11}},border:{display:false}},
+        y:{ticks:{color:'#374151',font:{size:12,weight:'500'}},grid:{display:false},border:{display:false}}
       }
     }
   });
 }
 
-// ── mapas ─────────────────────────────────────────────────
+let mapsInitialized = false;
 function initMaps(){
-  // Transamazônica
+  if(mapsInitialized) return;
+  mapsInitialized = true;
+
   const mapTA = L.map('map-transamazonica').setView([-3.0, -52.2], 8);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
+    attribution: '&copy; OpenStreetMap',
     maxZoom: 18
   }).addTo(mapTA);
 
-  const municipiosTa = [
-    {name: 'Altamira', lat: -2.908, lng: -52.209},
-    {name: 'Brasil Novo', lat: -3.802, lng: -52.254},
-    {name: 'Medicilândia', lat: -3.452, lng: -52.141},
-    {name: 'Uruará', lat: -2.755, lng: -51.757},
-    {name: 'Placas', lat: -3.097, lng: -52.614},
-    {name: 'Novo Repartimento', lat: -3.945, lng: -50.754},
-    {name: 'Pacajá', lat: -2.496, lng: -51.464}
-  ];
-
-  municipiosTa.forEach(m => {
+  [{name:'Altamira',lat:-2.908,lng:-52.209},{name:'Brasil Novo',lat:-3.802,lng:-52.254},{name:'Medicilandia',lat:-3.452,lng:-52.141},{name:'Uruara',lat:-2.755,lng:-51.757},{name:'Placas',lat:-3.097,lng:-52.614},{name:'Novo Repartimento',lat:-3.945,lng:-50.754},{name:'Pacaja',lat:-2.496,lng:-51.464}].forEach(m => {
     L.circleMarker([m.lat, m.lng], {
-      radius: 7,
-      fillColor: '#107C10',
-      color: '#004f20',
-      weight: 2,
-      opacity: 0.9,
-      fillOpacity: 0.7
-    }).bindPopup(`<strong>${m.name}</strong><br/>Transamazônica`).addTo(mapTA);
+      radius: 7,fillColor:'#1B3A5C',color:'#0C1D36',weight:2,opacity:0.9,fillOpacity:0.7
+    }).bindPopup('<strong>'+m.name+'</strong><br/>Transamazonica').addTo(mapTA);
   });
 
-  // Sudeste do Pará
   const mapSE = L.map('map-sudeste').setView([-6.8, -50.8], 8);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
+    attribution: '&copy; OpenStreetMap',
     maxZoom: 18
   }).addTo(mapSE);
 
-  const municipiosSe = [
-    {name: 'Tucumã', lat: -6.768, lng: -49.984},
-    {name: 'São Félix do Xingu', lat: -6.643, lng: -51.996},
-    {name: 'Ourilândia do Norte', lat: -7.167, lng: -51.500},
-    {name: 'Água Azul do Norte', lat: -6.433, lng: -50.398}
-  ];
-
-  municipiosSe.forEach(m => {
+  [{name:'Tucuma',lat:-6.768,lng:-49.984},{name:'Sao Felix do Xingu',lat:-6.643,lng:-51.996},{name:'Ourilandia do Norte',lat:-7.167,lng:-51.500},{name:'Agua Azul do Norte',lat:-6.433,lng:-50.398}].forEach(m => {
     L.circleMarker([m.lat, m.lng], {
-      radius: 7,
-      fillColor: '#0052CC',
-      color: '#003d99',
-      weight: 2,
-      opacity: 0.9,
-      fillOpacity: 0.7
-    }).bindPopup(`<strong>${m.name}</strong><br/>Sudeste do Pará`).addTo(mapSE);
+      radius: 7,fillColor:'#15803D',color:'#166534',weight:2,opacity:0.9,fillOpacity:0.7
+    }).bindPopup('<strong>'+m.name+'</strong><br/>Sudeste do Para').addTo(mapSE);
   });
 }
 
-// ── alertas ──────────────────────────────────────────────
 function renderAlertas(list){
   const wrap=document.getElementById('alertas');
   if(!list||!list.length){wrap.innerHTML='';return;}
-  wrap.innerHTML=list.map(a=>`
-    <div class="alert ${a.tipo}">
-      <span>${a.tipo==='warn'?'!':'i'}</span>
-      <span>${a.msg}</span>
-    </div>`).join('');
+  wrap.innerHTML=list.map(a=>'<div class="alert '+a.tipo+'"><span>'+(a.tipo==='warn'?'!':'i')+'</span><span>'+a.msg+'</span></div>').join('');
 }
 
-// ── mock data (substituir por fetch da planilha real) ─────
 function getMock(){
   return {
     atualizado:'07/04/2026', quinzena:'14', periodo:'Abr/2025 – Set/2026',
     alertas:[
-      {tipo:'info', msg:'Dashboard com dados demonstrativos dos territórios Transamazônica e Sudeste do Pará.'},
+      {tipo:'info', msg:'Dashboard com dados demonstrativos dos territorios Transamazonica e Sudeste do Para.'},
     ],
-    // dados demonstrativos — Programa 1 (Pessoas)
     con:542, mel:348, tra:89,
-    // dados demonstrativos — Programa 2 (Territorial)
     ater:142, car:38, prada:31, cred:28, uds:9, org:14,
-    // séries temporais — quinzenas
     seriesCon:[45,78,112,151,190,228,261,285,320,378,425,512,542],
     seriesMel:[12,35,55,78,104,130,152,168,210,258,298,325,348],
     seriesTra:[3,7,12,18,24,29,33,37,48,62,73,82,89],
-    // parceiros por contribuição
-    parceiros:{
-      Crescer: 186,
-      Solidaridad: 154,
-      FUNEP: 89,
-      UNICAFES: 67,
-      'Sense-Lab': 28,
-      'Creditares': 12,
-      ISES: 6
-    },
-    // dados por território
-    territorios: {
-      transamazonica: {
-        pessoas: 385,
-        organizacoes: 9,
-        municipios: ['Altamira', 'Brasil Novo', 'Medicilândia', 'Uruará', 'Placas', 'Novo Repartimento', 'Pacajá']
-      },
-      sudeste: {
-        pessoas: 157,
-        organizacoes: 5,
-        municipios: ['Tucumã', 'São Félix do Xingu', 'Ourilândia do Norte', 'Água Azul do Norte']
-      }
+    parceiros:{Crescer:186,Solidaridad:154,FUNEP:89,UNICAFES:67,'Sense-Lab':28,Creditares:12,ISES:6},
+    territorios:{
+      transamazonica:{pessoas:385,organizacoes:9,municipios:['Altamira','Brasil Novo','Medicilandia','Uruara','Placas','Novo Repartimento','Pacaja']},
+      sudeste:{pessoas:157,organizacoes:5,municipios:['Tucuma','Sao Felix do Xingu','Ourilandia do Norte','Agua Azul do Norte']}
     }
   };
 }
 
-// ── summary strip ────────────────────────────────────────
 function updateSummary(d){
   const total = (d.con||0)+(d.mel||0)+(d.tra||0);
   const ss = id => document.getElementById(id);
@@ -1664,7 +1757,6 @@ function updateSummary(d){
     ss('ss-prog').textContent = prog;
     ss('ss-prog').classList.remove('nd');
   }
-  // count active axes
   let active = 0;
   [d.ater,d.car,d.prada,d.cred,d.uds].forEach(v=>{if(v!=null && v>0) active++});
   if(active){
@@ -1675,7 +1767,6 @@ function updateSummary(d){
   ss('ss-parceiros').classList.remove('nd');
 }
 
-// ── funnel update ────────────────────────────────────────
 function updateFunnel(d){
   ['con','mel','tra'].forEach(k=>{
     const val=d[k];
@@ -1690,7 +1781,6 @@ function updateFunnel(d){
   });
 }
 
-// ── init ─────────────────────────────────────────────────
 async function init(){
   let d;
   try{
@@ -1698,10 +1788,6 @@ async function init(){
     d=await r.json();
   }catch{d=getMock();}
 
-  // fonte banner
-  document.getElementById('fonte-url').textContent=DATA_URL;
-
-  // header
   document.getElementById('hdr-quinzena').textContent=d.quinzena||'—';
   document.getElementById('hdr-periodo').textContent=d.periodo||'—';
   document.getElementById('hdr-data').textContent=d.atualizado||'—';
@@ -1709,7 +1795,6 @@ async function init(){
   renderAlertas(d.alertas);
   updateSummary(d);
 
-  // kpis visão geral
   setKpi('k-con',  d.con,  METAS.con,   'b-con');
   setKpi('k-mel',  d.mel,  METAS.mel,   'b-mel');
   setKpi('k-tra',  d.tra,  METAS.tra,   'b-tra');
@@ -1720,13 +1805,11 @@ async function init(){
   setKpi('k-uds',  d.uds,  METAS.uds,   'b-uds');
   setKpi('k-org',  null,   null,        'b-org');
 
-  // funnel
   updateFunnel(d);
   setPr('pf-ater','pv-ater',d.ater,METAS.ater);
   setPr('pf-car',null,d.car,METAS.car);
   setPr('pf-prada',null,d.prada,METAS.prada);
 
-  // % progressão
   const prog=d.con&&d.mel ? Math.round(d.mel/d.con*100) : null;
   setKpi('k-prog',prog!=null?prog+'%':null,100,'b-prog');
 
@@ -1735,11 +1818,6 @@ async function init(){
 
 init();
 </script>
-
-<!-- ── FOOTER ───────────────────────────────────────────── -->
-<div class="footer">
-  Elaborado por Olab
-</div>
 
 </body>
 </html>
